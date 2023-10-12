@@ -66,7 +66,7 @@ int main() {
     int number_of_images, image_size;
 
     std::string mnist_file;
-    std::cout << "Enter the path to the MNIST file (e.g., C:\\path\\to\\index.dat): ";
+    std::cout << R"(Enter the path to the MNIST file (e.g., C:\path\to\index.dat): )";
     std::cin >> mnist_file;
 
 
