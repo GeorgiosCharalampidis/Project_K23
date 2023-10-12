@@ -1,7 +1,6 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <stdexcept>
 #include <vector>
 #include "minst.h"
 #include "lsh.h"
@@ -12,7 +11,7 @@
 int main() {
     int number_of_images, image_size;
 
-    // Η άσκηση ζητάει τα paths κατά την εκτέλεση του προγράμματος, που έχει υλοποιηθεί παρακάτω
+    // Η άσκηση ζητάει τα paths κατά την εκτέλεση του προγράμματος, που έχω υλοποιηθεί παρακάτω
     // Για λόγους ταχύτητας και ευκολίας στο debugging, δίνω καρφωτά τις τοποθεσίες
 
     /*
@@ -43,11 +42,8 @@ int main() {
     // Create an output file stream with the user-specified file path
     std::ofstream outputFile(outputPath, std::ios::binary);
 
-
-
     // Close the file
     outputFile.close();
-
 
     */
 
@@ -55,15 +51,12 @@ int main() {
     // Δίνω καρφωτά τις τοποθεσίες των input.dat και query.dat
     // Δημιουργώ αντίστοιχα τα dataset και query_set
 
-
-
     std::string input = R"(C:\Users\test\CLionProjects\Project_K23\input.dat)";
     std::string query = R"(C:\Users\test\CLionProjects\Project_K23\query.dat)";
     std::string outputPath = R"(C:\Users\test\CLionProjects\Project_K23\output.dat)";
 
     std::vector<std::vector<unsigned char>> dataset = read_mnist_images(input, number_of_images, image_size);
     std::vector<std::vector<unsigned char>> query_set = read_mnist_images(query, number_of_images,image_size);
-
 
     std::ofstream outputFile(outputPath, std::ios::binary);
 
