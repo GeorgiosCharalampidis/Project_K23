@@ -65,8 +65,13 @@ void print_image(const std::vector<unsigned char>& image, int width, int height)
 int main() {
     int number_of_images, image_size;
 
+    std::string mnist_file;
+    std::cout << "Enter the path to the MNIST file (e.g., C:\\path\\to\\index.dat): ";
+    std::cin >> mnist_file;
+
+
     // Προφανώς η τοποθεσία του αρχείου θα πρέπει να αλλάξει ανάλογα με τον υπολογιστή σας
-    std::string mnist_file = R"(C:\Users\test\CLionProjects\ProjectEm\input.dat)";
+    //std::string mnist_file = R"(C:\Users\test\CLionProjects\ProjectEm\input.dat)";
 
     // Διαβάζουμε τα δεδομένα των εικόνων MNIST από το αρχείο
     std::vector<std::vector<unsigned char>> dataset = read_mnist_images(mnist_file, number_of_images, image_size);
@@ -75,13 +80,16 @@ int main() {
     // Ντελαπόνγκο , στο input.dat υπάρχουν 60000 εικόνες , με κάθε εικόνα να έχει 784 pixels
     // Οπότε πρακτικά έχουμε ένα vector 60000 εικόνων , με κάθε διάνυσμα στο vector να έχει 784 διαστάσεις
 
+
     /*
+
+
     for (int i = 0; i < number_of_images; i++) {
         std::cout << "Image " << i + 1 << ":" << std::endl;
         print_image(dataset[i], 28, 28); // Οι διαστάσεις 28x28 αντιστοιχούν στο MNIST
     }
+
     */
 
-    std::cout << "Hello World!" << std::endl;
     return 0;
 }
