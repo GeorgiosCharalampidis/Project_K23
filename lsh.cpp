@@ -5,6 +5,27 @@
 #include <vector>
 #include <random>
 #include <cmath>
+#include "minst.h"
+
+// Συνάρτηση για υπολογισμό της ευκλείδειας απόστασης (L2) μεταξύ δύο διανυσμάτων
+double euclideanDistance(const std::vector<unsigned char>& dataset, const std::vector<unsigned char>& query_set) {
+
+    if (dataset.size() != query_set.size()) {
+        throw std::runtime_error("Vectors must have the same dimension for L2 distance calculation.");
+    }
+
+    //Για κάθε εικόνα στο dataset και query set θα υπολογίζουμε την ευκλείδεια απόσταση μεταξύ τους
+    //Το vec1
+
+    double distance = 0.0;
+    for (size_t i = 0; i < dataset.size(); ++i) {
+        double diff = static_cast<double>(dataset[i]) - static_cast<double>(query_set[i]);
+        distance += diff * diff;
+    }
+
+    return std::sqrt(distance);
+}
+
 
 // Υλοποίηση της LSH συνάρτηση
 class LSH {
@@ -57,5 +78,4 @@ std::vector<int> LSH::query(const std::vector<unsigned char>& query_point) {
     // Χρησιμοποιήστε τους πίνακες κατακερματισμού και τις hash functions που έχετε δημιουργήσει.
     // Βρείτε το hash value του ερωτηματικού διανύσματος και αναζητήστε τα κοντινότερα διανύσματα.
 
-    // Επιστ
 }

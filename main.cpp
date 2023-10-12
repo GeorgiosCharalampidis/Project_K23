@@ -6,11 +6,9 @@
 #include "lsh.h"
 
 
-
-
 int main() {
     int number_of_images, image_size;
-
+    double euc_Distance;
     // Η άσκηση ζητάει τα paths κατά την εκτέλεση του προγράμματος, που έχω υλοποιηθεί παρακάτω
     // Για λόγους ταχύτητας και ευκολίας στο debugging, δίνω καρφωτά τις τοποθεσίες
 
@@ -77,7 +75,16 @@ int main() {
 
     */
 
+    // Εκτύπωνουμε την ευκλείδια απόσταση των δύο dataset για testing
 
+    /*
+
+    for (int i = 0; i < 3000; i++) {
+        euc_Distance = euclideanDistance(dataset[i], query_set[i]);
+        std::cout<< "euclideanDistance of dataset["<< i << "]" << " and query_set[" << i << "] = " << euc_Distance << std::endl;
+    }
+
+    */
 
     return 0;
 }

@@ -56,6 +56,7 @@ std::vector<std::vector<unsigned char>> read_mnist_images(std::string full_path,
 // Συνάρτηση που εκτυπώνει μια εικόνα από το dataset
 void print_image(const std::vector<unsigned char>& image, int width, int height) {
     // Εκτυπώνουμε την εικόνα στην οθόνη
+
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
             std::cout << static_cast<int>(image[i * width + j]) << " ";
@@ -63,4 +64,5 @@ void print_image(const std::vector<unsigned char>& image, int width, int height)
         std::cout << std::endl;
     }
     std::cout << std::endl;
+
 }
