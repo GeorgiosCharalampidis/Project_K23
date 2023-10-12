@@ -128,6 +128,30 @@ ProjectEm/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjectEm.dir\build.make CMakeFiles/ProjectEm.dir/build
 .PHONY : ProjectEm/fast
 
+lsh.obj: lsh.cpp.obj
+.PHONY : lsh.obj
+
+# target to build an object file
+lsh.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjectEm.dir\build.make CMakeFiles/ProjectEm.dir/lsh.cpp.obj
+.PHONY : lsh.cpp.obj
+
+lsh.i: lsh.cpp.i
+.PHONY : lsh.i
+
+# target to preprocess a source file
+lsh.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjectEm.dir\build.make CMakeFiles/ProjectEm.dir/lsh.cpp.i
+.PHONY : lsh.cpp.i
+
+lsh.s: lsh.cpp.s
+.PHONY : lsh.s
+
+# target to generate assembly for a file
+lsh.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjectEm.dir\build.make CMakeFiles/ProjectEm.dir/lsh.cpp.s
+.PHONY : lsh.cpp.s
+
 main.obj: main.cpp.obj
 .PHONY : main.obj
 
@@ -152,6 +176,30 @@ main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjectEm.dir\build.make CMakeFiles/ProjectEm.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+minst.obj: minst.cpp.obj
+.PHONY : minst.obj
+
+# target to build an object file
+minst.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjectEm.dir\build.make CMakeFiles/ProjectEm.dir/minst.cpp.obj
+.PHONY : minst.cpp.obj
+
+minst.i: minst.cpp.i
+.PHONY : minst.i
+
+# target to preprocess a source file
+minst.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjectEm.dir\build.make CMakeFiles/ProjectEm.dir/minst.cpp.i
+.PHONY : minst.cpp.i
+
+minst.s: minst.cpp.s
+.PHONY : minst.s
+
+# target to generate assembly for a file
+minst.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjectEm.dir\build.make CMakeFiles/ProjectEm.dir/minst.cpp.s
+.PHONY : minst.cpp.s
+
 # Help Target
 help:
 	@echo The following are some of the valid targets for this Makefile:
@@ -161,9 +209,15 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... ProjectEm
+	@echo ... lsh.obj
+	@echo ... lsh.i
+	@echo ... lsh.s
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s
+	@echo ... minst.obj
+	@echo ... minst.i
+	@echo ... minst.s
 .PHONY : help
 
 

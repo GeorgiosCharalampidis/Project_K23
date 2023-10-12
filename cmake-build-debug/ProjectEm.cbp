@@ -82,7 +82,19 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="C:/Users/test/CLionProjects/Project_K23/lsh.cpp">
+			<Option target="ProjectEm"/>
+		</Unit>
+		<Unit filename="C:/Users/test/CLionProjects/Project_K23/lsh.h">
+			<Option target="ProjectEm"/>
+		</Unit>
 		<Unit filename="C:/Users/test/CLionProjects/Project_K23/main.cpp">
+			<Option target="ProjectEm"/>
+		</Unit>
+		<Unit filename="C:/Users/test/CLionProjects/Project_K23/minst.cpp">
+			<Option target="ProjectEm"/>
+		</Unit>
+		<Unit filename="C:/Users/test/CLionProjects/Project_K23/minst.h">
 			<Option target="ProjectEm"/>
 		</Unit>
 		<Unit filename="C:/Users/test/CLionProjects/Project_K23/CMakeLists.txt">
