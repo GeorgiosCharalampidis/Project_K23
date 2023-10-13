@@ -5,15 +5,13 @@
 
 
 double euclideanDistance(const std::vector<unsigned char>& vec1, const std::vector<unsigned char>& vec2);
-
+std::vector<std::vector<int>> createRandomHashFunctions(int num_tables, int num_functions, int num_dimensions, int M);
 
 class LSH {
 public:
     LSH(int num_tables, int num_functions, int num_dimensions, double radius);
 
     void buildIndex(const std::vector<std::vector<unsigned char>> &dataset);
-
-    std::vector<int> query(const std::vector<unsigned char> &query_point);
 
 private:
     int num_tables;
