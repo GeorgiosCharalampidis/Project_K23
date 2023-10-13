@@ -77,14 +77,14 @@ int main() {
 
     // Εκτύπωνουμε την ευκλείδια απόσταση των δύο dataset για testing
 
-    /*
+
 
     for (int i = 0; i < 3000; i++) {
         euc_Distance = euclideanDistance(dataset[i], query_set[i]);
         std::cout<< "euclideanDistance of dataset["<< i << "]" << " and query_set[" << i << "] = " << euc_Distance << std::endl;
     }
 
-    */
+
 
     return 0;
 }
