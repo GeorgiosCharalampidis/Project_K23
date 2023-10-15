@@ -68,13 +68,16 @@ int main() {
 
     // Close the file
     outputFile.close();
-    for (int i = 0; i < 500; i++) {
+    testset.reserve(500);
+    for (int i = 0; i < 25000; i++) {
         testset.push_back(dataset[i]);
     }
 
     LSH lsh(5, 5, 28*28, 5.0);
     lsh.buildIndex(testset);
     lsh.printHashTables();
+
+
 
 //    std::cout << "Hello from main!" << std::endl;
 
@@ -114,5 +117,6 @@ int main() {
     */
 
 //    std:: cout << "Helllo from main again!" << std::endl;
+
     return 0;
 }

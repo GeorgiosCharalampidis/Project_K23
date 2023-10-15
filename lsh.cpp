@@ -20,8 +20,10 @@ double euclideanDistance(const std::vector<unsigned char>& dataset, const std::v
 class LSH {
 public:
     LSH(int num_tables, int num_functions, int num_dimensions, double radius);
+    ~LSH();
     void buildIndex(const std::vector<std::vector<unsigned char>>& dataset);
     void printHashTables() const;
+
     /*
     std::vector<int> queryNearestNeighbor(const std::vector<unsigned char>& query_point, const std::vector<std::vector<unsigned char>>& dataset);
     std::vector<int> queryNNearestNeighbors(const std::vector<unsigned char>& query_point, int N);
@@ -49,6 +51,17 @@ LSH::LSH(int num_tables, int num_functions, int num_dimensions, double radius)
         hash_functions[i] = createHashFunctions(num_functions, num_dimensions, radius);
     }
 }
+
+LSH::~LSH() {
+    for (auto& table_functions : hash_functions) {
+        for (auto& hash_function : table_functions) {
+            hash_function.first.clear(); // Clear the vector within each pair
+        }
+        table_functions.clear(); // Clear the table's vector of hash functions
+    }
+    hash_functions.clear(); // Clear the vector of hash function tables
+}
+
 
 std::vector<std::pair<std::vector<double>, double>> LSH::createHashFunctions(int nf, int nd, int w) {
     std::random_device rd;
@@ -131,6 +144,7 @@ int LSH::hash(const std::vector<unsigned char>& data_point, int table_index) {
 
     return hash_value;
 }
+
 
 void LSH::printHashTables() const {
     for (int tableIndex = 0; tableIndex < num_tables; ++tableIndex) {

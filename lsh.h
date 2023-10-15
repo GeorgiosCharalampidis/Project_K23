@@ -9,6 +9,7 @@ void printHashTables(const std::vector<std::vector<std::vector<int>>>& hash_tabl
 class LSH {
 public:
     LSH(int num_tables, int num_functions, int num_dimensions, double radius);
+    ~LSH();
 
     void buildIndex(const std::vector<std::vector<unsigned char>>& dataset);
     int queryNearestNeighbor(const std::vector<unsigned char>& query_point, const std::vector<std::vector<unsigned char>>& dataset);

@@ -18,3 +18,5 @@ To lsh.cpp μην το κοιτάς πέρα από την ευκλείδια σ
 Ήθελα απλά να έχω μια βάση , γιατί δεν έχω ξαναδουλέψει με hash tables.
 
 Nothing makes sense anymore. Im slowly but steadily losing my mind.
+
+I finally got rid of the fking segmentation fault.
