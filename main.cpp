@@ -8,9 +8,10 @@
 
 int main() {
     int number_of_images, image_size;
-    double euc_Distance;
     // Η άσκηση ζητάει τα paths κατά την εκτέλεση του προγράμματος, που έχω υλοποιηθεί παρακάτω
     // Για λόγους ταχύτητας και ευκολίας στο debugging, δίνω καρφωτά τις τοποθεσίες
+
+
 
     /*
 
@@ -56,11 +57,26 @@ int main() {
     std::vector<std::vector<unsigned char>> dataset = read_mnist_images(input, number_of_images, image_size);
     std::vector<std::vector<unsigned char>> query_set = read_mnist_images(query, number_of_images,image_size);
 
+
+    std::vector<std::vector<unsigned char>> testset;
+
+
+
+
+
     std::ofstream outputFile(outputPath, std::ios::binary);
 
     // Close the file
     outputFile.close();
+    for (int i = 0; i < 500; i++) {
+        testset.push_back(dataset[i]);
+    }
 
+    LSH lsh(5, 5, 28*28, 5.0);
+    lsh.buildIndex(testset);
+    lsh.printHashTables();
+
+//    std::cout << "Hello from main!" << std::endl;
 
     // Εκτυπώνουμε τις εικόνες των δύο datasets για testing
 
@@ -86,5 +102,17 @@ int main() {
 
     */
 
+
+
+    /*
+    for (int i = 0; i < 5; i++) {
+        std::cout << "Image " << i + 1 << " of testset:" << std::endl;
+        print_image(testset[i], 28, 28); // Οι διαστάσεις 28x28 αντιστοιχούν στο MNIST
+
+    }
+
+    */
+
+//    std:: cout << "Helllo from main again!" << std::endl;
     return 0;
 }
