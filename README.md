@@ -16,3 +16,5 @@ To lsh.cpp μην το κοιτάς πέρα από την ευκλείδια σ
 Τα υπόλοιπα απλά τα πρόσθετα , θα κάτσω αύριο να τα μελετήσω και να τα τροποποιήσω.
 
 Ήθελα απλά να έχω μια βάση , γιατί δεν έχω ξαναδουλέψει με hash tables.
+
+Nothing makes sense anymore. Im slowly but steadily losing my mind.
