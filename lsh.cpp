@@ -24,11 +24,11 @@ public:
     void buildIndex(const std::vector<std::vector<unsigned char>>& dataset);
     void printHashTables() const;
 
-    /*
+
     std::vector<int> queryNearestNeighbor(const std::vector<unsigned char>& query_point, const std::vector<std::vector<unsigned char>>& dataset);
-    std::vector<int> queryNNearestNeighbors(const std::vector<unsigned char>& query_point, int N);
-    std::vector<int> rangeSearch(const std::vector<unsigned char>& query_point, double R);
-    */
+//    std::vector<int> queryNNearestNeighbors(const std::vector<unsigned char>& query_point, int N);
+//    std::vector<int> rangeSearch(const std::vector<unsigned char>& query_point, double R);
+
 private:
     int num_tables;
     int num_functions;
@@ -164,7 +164,6 @@ void LSH::printHashTables() const {
     }
 }
 
-/*
 
 std::vector<int> LSH::queryNearestNeighbor(const std::vector<unsigned char>& query_point, const std::vector<std::vector<unsigned char>>& dataset) {
     std::vector<int> nearest_neighbors;
@@ -189,6 +188,7 @@ std::vector<int> LSH::queryNearestNeighbor(const std::vector<unsigned char>& que
     return nearest_neighbors;
 }
 
+/*
 
 std::vector<int> LSH::queryNNearestNeighbors(const std::vector<unsigned char>& query_point, int N) {
     // Implementation pending

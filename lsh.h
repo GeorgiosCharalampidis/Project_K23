@@ -8,7 +8,7 @@ void printHashTables(const std::vector<std::vector<std::vector<int>>>& hash_tabl
 
 class LSH {
 public:
-    LSH(int num_tables, int num_functions, int num_dimensions, double radius);
+    explicit LSH(int num_tables = 5, int num_functions = 4, int num_dimensions = 784, double radius = 10000.0);
     ~LSH();
 
     void buildIndex(const std::vector<std::vector<unsigned char>>& dataset);

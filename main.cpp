@@ -62,8 +62,6 @@ int main() {
 
 
 
-
-
     std::ofstream outputFile(outputPath, std::ios::binary);
 
     // Close the file
@@ -73,9 +71,13 @@ int main() {
         testset.push_back(dataset[i]);
     }
 
-    LSH lsh(5, 5, 28*28, 5.0);
+    LSH lsh;
     lsh.buildIndex(testset);
-    lsh.printHashTables();
+   // lsh.printHashTables();
+
+   //std::vector<int> nearestNeighbor = lsh.queryNearestNeighbor(query_set[0], dataset);
+
+   // std::cout << "Nearest neighbor of query_set[0] is: " << nearestNeighbor << std::endl;
 
 
 
