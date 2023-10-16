@@ -4,6 +4,7 @@
 #include <random>
 #include <cmath>
 #include <limits>
+#include "lsh.h"
 
 double euclideanDistance(const std::vector<unsigned char>& dataset, const std::vector<unsigned char>& query_set) {
     if (dataset.size() != query_set.size()) {
@@ -17,29 +18,7 @@ double euclideanDistance(const std::vector<unsigned char>& dataset, const std::v
     return std::sqrt(distance);
 }
 
-class LSH {
-public:
-    LSH(int num_tables, int num_functions, int num_dimensions, double radius);
-    ~LSH();
-    void buildIndex(const std::vector<std::vector<unsigned char>>& dataset);
-    void printHashTables() const;
 
-
-    std::vector<int> queryNearestNeighbor(const std::vector<unsigned char>& query_point, const std::vector<std::vector<unsigned char>>& dataset);
-//    std::vector<int> queryNNearestNeighbors(const std::vector<unsigned char>& query_point, int N);
-//    std::vector<int> rangeSearch(const std::vector<unsigned char>& query_point, double R);
-
-private:
-    int num_tables;
-    int num_functions;
-    int num_dimensions;
-    double radius;
-    std::vector<std::vector<std::vector<int>>> hash_tables;
-    std::vector<std::vector<std::pair<std::vector<double>, double>>> hash_functions;
-
-    int hash(const std::vector<unsigned char>& data_point, int table_index);
-    static std::vector<std::pair<std::vector<double>, double>> createHashFunctions(int nf, int nd, int w);
-};
 
 LSH::LSH(int num_tables, int num_functions, int num_dimensions, double radius)
         : num_tables(num_tables), num_functions(num_functions),

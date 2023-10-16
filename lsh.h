@@ -8,28 +8,26 @@ void printHashTables(const std::vector<std::vector<std::vector<int>>>& hash_tabl
 
 class LSH {
 public:
-    explicit LSH(int num_tables = 5, int num_functions = 4, int num_dimensions = 784, double radius = 10000.0);
+    LSH(int num_tables = 5, int num_functions = 5, int num_dimensions = 784, double radius= 10000);
     ~LSH();
-
     void buildIndex(const std::vector<std::vector<unsigned char>>& dataset);
-    int queryNearestNeighbor(const std::vector<unsigned char>& query_point, const std::vector<std::vector<unsigned char>>& dataset);
-    std::vector<int> queryNNearestNeighbors(const std::vector<unsigned char>& query_point, int N);
-    std::vector<int> rangeSearch(const std::vector<unsigned char>& query_point, double R);
-    std::vector<std::vector<int>> createHashFunctions(int nf, int nd, int w);
     void printHashTables() const;
 
+
+    std::vector<int> queryNearestNeighbor(const std::vector<unsigned char>& query_point, const std::vector<std::vector<unsigned char>>& dataset);
+//    std::vector<int> queryNNearestNeighbors(const std::vector<unsigned char>& query_point, int N);
+//    std::vector<int> rangeSearch(const std::vector<unsigned char>& query_point, double R);
 
 private:
     int num_tables;
     int num_functions;
     int num_dimensions;
     double radius;
-    int M;
-
     std::vector<std::vector<std::vector<int>>> hash_tables;
-    std::vector<std::vector<int>> hash_functions;
+    std::vector<std::vector<std::pair<std::vector<double>, double>>> hash_functions;
 
     int hash(const std::vector<unsigned char>& data_point, int table_index);
+    static std::vector<std::pair<std::vector<double>, double>> createHashFunctions(int nf, int nd, int w);
 };
 
 #endif

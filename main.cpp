@@ -67,17 +67,17 @@ int main() {
     // Close the file
     outputFile.close();
     testset.reserve(500);
-    for (int i = 0; i < 25000; i++) {
+    for (int i = 0; i < 5000; i++) {
         testset.push_back(dataset[i]);
     }
 
     LSH lsh;
     lsh.buildIndex(testset);
-   // lsh.printHashTables();
+    lsh.printHashTables();
 
-   //std::vector<int> nearestNeighbor = lsh.queryNearestNeighbor(query_set[0], dataset);
+    //std::vector<int> nearestNeighbor = lsh.queryNearestNeighbor(query_set[0], dataset);
 
-   // std::cout << "Nearest neighbor of query_set[0] is: " << nearestNeighbor << std::endl;
+    // std::cout << "Nearest neighbor of query_set[0] is: " << nearestNeighbor << std::endl;
 
 
 
