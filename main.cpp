@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 #include <fstream>
 #include <string>
 #include <vector>
@@ -6,11 +7,77 @@
 #include "lsh.h"
 
 
-int main() {
-    int number_of_images, image_size;
-    // Η άσκηση ζητάει τα paths κατά την εκτέλεση του προγράμματος, που έχω υλοποιηθεί παρακάτω
-    // Για λόγους ταχύτητας και ευκολίας στο debugging, δίνω καρφωτά τις τοποθεσίες
+int main(int argc,char* argv[]) {
 
+    int number_of_images, image_size;
+
+
+
+    if (argc < 2) {
+        std::cerr << "Specify a mode: lsh or cube." << std::endl;
+        return 1;
+    }
+
+    std::string mode = argv[1];
+
+    if (mode == "./lsh") {
+        std::string inputFile, queryFile, outputFile;
+        int k, L, numberOfNearest;
+        double radius;
+        for (int i = 2; i < argc; ++i) {
+            if (strcmp(argv[i], "-d") == 0) {
+                inputFile = argv[++i];
+            } else if (strcmp(argv[i], "-q") == 0) {
+                queryFile = argv[++i];
+            } else if (strcmp(argv[i], "-k") == 0) {
+                k = std::stoi(argv[++i]);
+            } else if (strcmp(argv[i], "-L") == 0) {
+                L = std::stoi(argv[++i]);
+            } else if (strcmp(argv[i], "-o") == 0) {
+                outputFile = argv[++i];
+            } else if (strcmp(argv[i], "-N") == 0) {
+                numberOfNearest = std::stoi(argv[++i]);
+            } else if (strcmp(argv[i], "-R") == 0) {
+                radius = std::stod(argv[++i]);
+            }
+        }
+        /*
+        // printing the arguments
+        std::cout << "inputFile = " << inputFile << std::endl;
+        std::cout << "queryFile = " << queryFile << std::endl;
+        std::cout << "k = " << k << std::endl;
+        std::cout << "L = " << L << std::endl;
+        std::cout << "outputFile = " << outputFile << std::endl;
+        std::cout << "Number of nearest neighbors = " << numberOfNearest << std::endl;
+        std::cout << "radius = " << radius << std::endl;
+        */
+
+
+
+
+        // Create vector to store dataset
+        std::string input = R"(C:\Users\test\CLionProjects\Project_K23\input.dat)";
+        std::string query = R"(C:\Users\test\CLionProjects\Project_K23\query.dat)";
+        std::string outputPath = R"(C:\Users\test\CLionProjects\Project_K23\output.dat)";
+
+        std::vector<std::vector<unsigned char>> dataset = read_mnist_images(input, number_of_images, image_size);
+        std::vector<std::vector<unsigned char>> query_set = read_mnist_images(query, number_of_images,image_size);
+
+        // Create the lsh object using parsed arguments
+        LSH lsh(dataset,query_set,4,5,784,15000,5,10000);
+        //lsh.buildIndex(dataset);
+        //lsh.printHashTables();
+
+
+        // Continue with the rest of your lsh program
+        // ...
+
+    }else if (mode == "./cube") {
+
+    } else {
+        std::cerr << "Invalid mode: " << mode << std::endl;
+        return 1;
+    }
 
 
     /*
@@ -50,6 +117,8 @@ int main() {
     // Δίνω καρφωτά τις τοποθεσίες των input.dat και query.dat
     // Δημιουργώ αντίστοιχα τα dataset και query_set
 
+    /*
+
     std::string input = R"(C:\Users\test\CLionProjects\Project_K23\input.dat)";
     std::string query = R"(C:\Users\test\CLionProjects\Project_K23\query.dat)";
     std::string outputPath = R"(C:\Users\test\CLionProjects\Project_K23\output.dat)";
@@ -74,7 +143,10 @@ int main() {
     LSH lsh(dataset,testset,4,5,784,15000,5,10000);
 
     lsh.buildIndex(dataset);
+    lsh.printHashTables();
 
+
+    /*
 
     std::vector<int> nearest_neighbors_indices = lsh.queryNNearestNeighbors(testset[0], 8);
 
@@ -82,13 +154,14 @@ int main() {
     std::cout << "The " << 5 << " nearest neighbors for the given point are:" << std::endl;
     for (int index : nearest_neighbors_indices) {
         std::cout << "Neighbor at position " << index;
-        /*
+
         for (unsigned char value : dataset[index]) {
             std::cout << static_cast<int>(value) << " ";  // Assuming you want to print as integers
         }
-         */
+
         std::cout << std::endl;
     }
+    */
     //std::cout << lsh.countItemsInAllBuckets() << std::endl;
     // std::cout << lsh.getNumberofBuckets() << std::endl;
 

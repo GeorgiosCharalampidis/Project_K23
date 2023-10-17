@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdexcept>
+#include <utility>
 #include <vector>
 #include <random>
 #include <cmath>
@@ -23,8 +24,8 @@ double euclideanDistance(const std::vector<unsigned char>& dataset, const std::v
 
 // LSH Constructor
 LSH::LSH(std::vector<std::vector<unsigned char>> dataset,std::vector<std::vector<unsigned char>> query,int k, int L, int num_dimensions, int num_buckets, int N, double R)
-        : dataset(dataset),
-          query(query),
+        : dataset(std::move(dataset)),
+          query(std::move(query)),
           k(k), L(L),
           num_dimensions(num_dimensions),
           num_buckets(num_buckets),
@@ -87,18 +88,18 @@ std::vector<std::pair<std::vector<double>, double>> LSH::createHashFunctions(int
     return local_hash_functions;
 }
 
-void LSH::buildIndex(const std::vector<std::vector<unsigned char>>& dataset) {
+void LSH::buildIndex(const std::vector<std::vector<unsigned char>>& data_set) {
     // std::cout << "Building index with dataset size: " << dataset.size() << std::endl;
     for (auto& table : hash_tables) {
         table.resize(num_buckets);
     }
     // std::cout << "Resized hash_tables" << std::endl;
 
-    for (int i = 0; i < dataset.size(); ++i) {
+    for (int i = 0; i < data_set.size(); ++i) {
         // std::cout << "Processing dataset item: " << i << std::endl;
         for (int table_index = 0; table_index < L; ++table_index) {
             // std::cout << "Hashing for table: " << table_index << std::endl;
-            int hash_value = hashDataPoint(dataset[i], table_index);
+            int hash_value = hashDataPoint(data_set[i], table_index);
             // std::cout << "Hashed item " << i << " for table " << table_index << std::endl;
 
             try {
@@ -200,7 +201,7 @@ void LSH::printHashTables() const {
 
 
 
-std::vector<int> LSH::queryNNearestNeighbors(const std::vector<unsigned char>& query_point, int N) {
+std::vector<int> LSH::queryNNearestNeighbors(const std::vector<unsigned char>& query_point, int Number_of_Neighbors) {
     std::priority_queue<std::pair<double, int>> nearest_neighbors_queue;
 
     for (int table_index = 0; table_index < L; ++table_index) {
@@ -209,18 +210,20 @@ std::vector<int> LSH::queryNNearestNeighbors(const std::vector<unsigned char>& q
 
         for (int candidate_index : candidates) {
             double distance = euclideanDistance(dataset[candidate_index], query_point);
-            nearest_neighbors_queue.push({distance, candidate_index});
+            nearest_neighbors_queue.emplace(distance, candidate_index);
         }
     }
 
     std::vector<int> nearest_neighbors;
-    while (!nearest_neighbors_queue.empty() && nearest_neighbors.size() < N) {
+    while (!nearest_neighbors_queue.empty() && nearest_neighbors.size() < Number_of_Neighbors) {
         nearest_neighbors.push_back(nearest_neighbors_queue.top().second);
         nearest_neighbors_queue.pop();
     }
 
     return nearest_neighbors;
 }
+
+
 
 
 
