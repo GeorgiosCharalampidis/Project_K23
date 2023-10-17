@@ -66,14 +66,29 @@ int main() {
 
     // Close the file
     outputFile.close();
-    testset.reserve(5000);
-    for (int i = 0; i < 20000; i++) {
+    testset.reserve(5);
+    for (int i = 0; i < 5; i++) {
         testset.push_back(dataset[i]);
     }
 
-    LSH lsh;
-    lsh.buildIndex(testset);
-    lsh.printHashTables();
+    LSH lsh(dataset,testset,4,5,784,15000,5,10000);
+
+    lsh.buildIndex(dataset);
+
+
+    std::vector<int> nearest_neighbors_indices = lsh.queryNNearestNeighbors(testset[0], 8);
+
+    // Print the nearest neighbors
+    std::cout << "The " << 5 << " nearest neighbors for the given point are:" << std::endl;
+    for (int index : nearest_neighbors_indices) {
+        std::cout << "Neighbor at position " << index;
+        /*
+        for (unsigned char value : dataset[index]) {
+            std::cout << static_cast<int>(value) << " ";  // Assuming you want to print as integers
+        }
+         */
+        std::cout << std::endl;
+    }
     //std::cout << lsh.countItemsInAllBuckets() << std::endl;
     // std::cout << lsh.getNumberofBuckets() << std::endl;
 

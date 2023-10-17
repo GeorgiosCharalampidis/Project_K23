@@ -9,7 +9,7 @@ void printHashTables(const std::vector<std::vector<std::vector<int>>>& hash_tabl
 
 class LSH {
 public:
-    LSH(int k = 4, int L = 5, int num_dimensions = 784,int num_buckets = 15000,int N = 1, double R = 10000);
+    LSH(std::vector<std::vector<unsigned char>> dataset,std::vector<std::vector<unsigned char>> query,int k = 4, int L = 5, int num_dimensions = 784,int num_buckets = 15000,int N = 1, double R = 10000);
     ~LSH();
     void buildIndex(const std::vector<std::vector<unsigned char>>& dataset);
     void printHashTables() const;
@@ -30,6 +30,8 @@ private:
     int L; // Number of hash tables
     int num_buckets; // Number of buckets
     int N; // Number of nearest neighbors
+    std::vector<std::vector<unsigned char>> dataset;
+    std::vector<std::vector<unsigned char>> query;
     double w;
     std::vector<int> ri_values;
 

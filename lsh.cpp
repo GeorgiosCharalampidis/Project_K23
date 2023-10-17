@@ -22,8 +22,10 @@ double euclideanDistance(const std::vector<unsigned char>& dataset, const std::v
 }
 
 // LSH Constructor
-LSH::LSH(int k, int L, int num_dimensions, int num_buckets, int N, double R)
-        : k(k), L(L),
+LSH::LSH(std::vector<std::vector<unsigned char>> dataset,std::vector<std::vector<unsigned char>> query,int k, int L, int num_dimensions, int num_buckets, int N, double R)
+        : dataset(dataset),
+          query(query),
+          k(k), L(L),
           num_dimensions(num_dimensions),
           num_buckets(num_buckets),
           N(N), R(R),
@@ -196,7 +198,7 @@ void LSH::printHashTables() const {
     }
 }
 
-/*
+
 
 std::vector<int> LSH::queryNNearestNeighbors(const std::vector<unsigned char>& query_point, int N) {
     std::priority_queue<std::pair<double, int>> nearest_neighbors_queue;
@@ -220,7 +222,9 @@ std::vector<int> LSH::queryNNearestNeighbors(const std::vector<unsigned char>& q
     return nearest_neighbors;
 }
 
-*/
+
+
+
 /*
 
 std::vector<int> LSH::queryNNearestNeighbors(const std::vector<unsigned char>& query_point, int N) {
