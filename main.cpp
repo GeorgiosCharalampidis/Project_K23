@@ -67,14 +67,14 @@ int main() {
     // Close the file
     outputFile.close();
     testset.reserve(5000);
-    for (int i = 0; i < 5000; i++) {
+    for (int i = 0; i < 20000; i++) {
         testset.push_back(dataset[i]);
     }
 
     LSH lsh;
     lsh.buildIndex(testset);
     lsh.printHashTables();
-
+    //std::cout << lsh.countItemsInAllBuckets() << std::endl;
     // std::cout << lsh.getNumberofBuckets() << std::endl;
 
     //std::vector<int> nearestNeighbor = lsh.queryNearestNeighbor(query_set[0], dataset);
