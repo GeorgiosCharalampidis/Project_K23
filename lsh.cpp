@@ -18,18 +18,37 @@ double euclideanDistance(const std::vector<unsigned char>& dataset, const std::v
     return std::sqrt(distance);
 }
 
+LSH::LSH(int k, int L, int num_dimensions, int num_buckets, int N, double R)
+        : k(k), L(L),
+          num_dimensions(num_dimensions),
+          num_buckets(num_buckets),
+          N(N), R(R),
+          hash_tables(L, std::vector<std::vector<int>>(num_buckets)), // Ensure table has correct size initially
+          hash_functions(L)
+          {
+                 // Create hash functions for each table here
+                for(int i = 0; i < L; ++i) {
+                    hash_functions[i] = createHashFunctions(k, num_dimensions);
+                }
+
+                /*
+                // Create random 'ri' values for hash functions
+                ri_values.resize(k);
+                for (int i = 0; i < k; ++i) {
+                    std::uniform_int_distribution<int> dist(1, M - 1);
+                    ri_values[i] = dist(generator_);
+                }
+                */
+
+            // Generate 'w' randomly in the range [0, 6]
+            std::random_device rd;
+            std::default_random_engine generator(rd());
+            std::uniform_real_distribution<double> w_distribution(2.0, 6.0);
+            w = w_distribution(generator);
+
+          }
 
 
-LSH::LSH(int num_tables, int num_functions, int num_dimensions, double radius)
-        : num_tables(num_tables), num_functions(num_functions),
-          num_dimensions(num_dimensions), radius(radius),
-          hash_tables(num_tables, std::vector<std::vector<int>>(1 << num_functions)), // Ensure table has correct size initially
-          hash_functions(num_tables) {
-    // Create hash functions for each table here
-    for(int i = 0; i < num_tables; ++i) {
-        hash_functions[i] = createHashFunctions(num_functions, num_dimensions, radius);
-    }
-}
 
 LSH::~LSH() {
     for (auto& table_functions : hash_functions) {
@@ -42,7 +61,7 @@ LSH::~LSH() {
 }
 
 
-std::vector<std::pair<std::vector<double>, double>> LSH::createHashFunctions(int nf, int nd, int w) {
+std::vector<std::pair<std::vector<double>, double>> LSH::createHashFunctions(int nf, int nd) const {
     std::random_device rd;
     std::default_random_engine generator(rd());
     std::normal_distribution<double> distribution(0.0, 1.0);
@@ -65,13 +84,13 @@ std::vector<std::pair<std::vector<double>, double>> LSH::createHashFunctions(int
 void LSH::buildIndex(const std::vector<std::vector<unsigned char>>& dataset) {
     // std::cout << "Building index with dataset size: " << dataset.size() << std::endl;
     for (auto& table : hash_tables) {
-        table.resize(1 << num_functions);
+        table.resize(num_buckets);
     }
     // std::cout << "Resized hash_tables" << std::endl;
 
     for (int i = 0; i < dataset.size(); ++i) {
         // std::cout << "Processing dataset item: " << i << std::endl;
-        for (int table_index = 0; table_index < num_tables; ++table_index) {
+        for (int table_index = 0; table_index < L; ++table_index) {
             // std::cout << "Hashing for table: " << table_index << std::endl;
             int hash_value = hash(dataset[i], table_index);
             // std::cout << "Hashed item " << i << " for table " << table_index << std::endl;
@@ -93,7 +112,7 @@ void LSH::buildIndex(const std::vector<std::vector<unsigned char>>& dataset) {
 
 int LSH::hash(const std::vector<unsigned char>& data_point, int table_index) {
     // std::cout << "Calculating hash for table: " << table_index << std::endl;
-    if (table_index < 0 || table_index >= num_tables) {
+    if (table_index < 0 || table_index >= L) {
         throw std::out_of_range("Invalid table_index");
     }
     if (data_point.size() != num_dimensions) {
@@ -102,23 +121,23 @@ int LSH::hash(const std::vector<unsigned char>& data_point, int table_index) {
 
     int hash_value = 0;
     auto& table_functions = hash_functions[table_index];
-    if (table_functions.size() != num_functions) {
+    if (table_functions.size() != k) {
         throw std::runtime_error("Invalid number of hash functions for the table.");
     }
 
-    for (int i = 0; i < num_functions; ++i) {
+    for (int i = 0; i < k; ++i) {
         auto& [v, t] = table_functions[i];
         double dot_product = 0.0;
         for (int j = 0; j < num_dimensions; ++j) {
             dot_product += v[j] * data_point[j];
         }
-        int hi = static_cast<int>(std::floor((dot_product + t) / radius));
+        int hi = static_cast<int>(std::floor((dot_product + t) / w));
         // std::cout << "hi before binary operation: " << hi << std::endl;
         hash_value = (hash_value << 1) | (hi >= 0 ? hi & 1 : 0);
         // std::cout << "hi after binary operation: " << hi << std::endl;
     }
     // std::cout << "Hash value before anding: " << hash_value << std::endl;
-    hash_value = hash_value & ((1 << num_functions) - 1);
+    hash_value = hash_value & ((1 << k) - 1);
     // std::cout << "Final hash value: " << hash_value << std::endl;
 
     return hash_value;
@@ -126,10 +145,10 @@ int LSH::hash(const std::vector<unsigned char>& data_point, int table_index) {
 
 
 void LSH::printHashTables() const {
-    for (int tableIndex = 0; tableIndex < num_tables; ++tableIndex) {
+    for (int tableIndex = 0; tableIndex < L; ++tableIndex) {
         std::cout << "Table " << tableIndex << ":" << std::endl;
 
-        for (int bucketIndex = 0; bucketIndex < (1 << num_functions); ++bucketIndex) {
+        for (int bucketIndex = 0; bucketIndex < (1 << k); ++bucketIndex) {
             const std::vector<int>& bucket = hash_tables[tableIndex][bucketIndex];
 
             std::cout << "Bucket " << bucketIndex << ": ";
@@ -147,7 +166,7 @@ void LSH::printHashTables() const {
 std::vector<int> LSH::queryNearestNeighbor(const std::vector<unsigned char>& query_point, const std::vector<std::vector<unsigned char>>& dataset) {
     std::vector<int> nearest_neighbors;
 
-    for (int table_index = 0; table_index < num_tables; ++table_index) {
+    for (int table_index = 0; table_index < L; ++table_index) {
         int hash_value = hash(query_point, table_index);
         std::vector<int>& candidates = hash_tables[table_index][hash_value];
 
