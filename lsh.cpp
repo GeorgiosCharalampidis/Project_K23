@@ -137,7 +137,7 @@ int LSH::hash(const std::vector<unsigned char>& data_point, int table_index) {
         // std::cout << "hi after binary operation: " << hi << std::endl;
     }
     // std::cout << "Hash value before anding: " << hash_value << std::endl;
-    hash_value = hash_value & ((1 << k) - 1);
+    hash_value = hash_value & (num_buckets - 1);
     // std::cout << "Final hash value: " << hash_value << std::endl;
 
     return hash_value;
@@ -148,7 +148,7 @@ void LSH::printHashTables() const {
     for (int tableIndex = 0; tableIndex < L; ++tableIndex) {
         std::cout << "Table " << tableIndex << ":" << std::endl;
 
-        for (int bucketIndex = 0; bucketIndex < (1 << k); ++bucketIndex) {
+        for (int bucketIndex = 0; bucketIndex < (num_buckets); ++bucketIndex) {
             const std::vector<int>& bucket = hash_tables[tableIndex][bucketIndex];
 
             std::cout << "Bucket " << bucketIndex << ": ";

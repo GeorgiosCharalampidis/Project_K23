@@ -66,8 +66,8 @@ int main() {
 
     // Close the file
     outputFile.close();
-    testset.reserve(60000);
-    for (int i = 0; i < 60000; i++) {
+    testset.reserve(5000);
+    for (int i = 0; i < 5000; i++) {
         testset.push_back(dataset[i]);
     }
 
