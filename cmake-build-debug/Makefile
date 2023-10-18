@@ -128,6 +128,30 @@ ProjectEm/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjectEm.dir\build.make CMakeFiles/ProjectEm.dir/build
 .PHONY : ProjectEm/fast
 
+Hypercube.obj: Hypercube.cpp.obj
+.PHONY : Hypercube.obj
+
+# target to build an object file
+Hypercube.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjectEm.dir\build.make CMakeFiles/ProjectEm.dir/Hypercube.cpp.obj
+.PHONY : Hypercube.cpp.obj
+
+Hypercube.i: Hypercube.cpp.i
+.PHONY : Hypercube.i
+
+# target to preprocess a source file
+Hypercube.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjectEm.dir\build.make CMakeFiles/ProjectEm.dir/Hypercube.cpp.i
+.PHONY : Hypercube.cpp.i
+
+Hypercube.s: Hypercube.cpp.s
+.PHONY : Hypercube.s
+
+# target to generate assembly for a file
+Hypercube.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjectEm.dir\build.make CMakeFiles/ProjectEm.dir/Hypercube.cpp.s
+.PHONY : Hypercube.cpp.s
+
 lsh.obj: lsh.cpp.obj
 .PHONY : lsh.obj
 
@@ -209,6 +233,9 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... ProjectEm
+	@echo ... Hypercube.obj
+	@echo ... Hypercube.i
+	@echo ... Hypercube.s
 	@echo ... lsh.obj
 	@echo ... lsh.i
 	@echo ... lsh.s

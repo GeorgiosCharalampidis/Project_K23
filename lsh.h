@@ -14,16 +14,15 @@ public:
     void buildIndex(const std::vector<std::vector<unsigned char>>& dataset);
     void printHashTables() const;
     int countItemsInAllBuckets() const;
-  //  int getNumberofBuckets() const;
-  //  std::vector<int> ri_values;
-    // const int64_t M = (1LL << 31) - 5; // Define M as a large prime, for example: 2^31 - 5
-   // static std::default_random_engine generator_;
-   // const int64_t M = (1LL << 31) - 5; // Define M as a large prime, for example: 2^31 - 5
+    //  int getNumberofBuckets() const;
+    std::vector<std::pair<std::vector<double>, double>> createHashFunctions(int nf, int nd) const;
+    std::vector<int> calculateHiValues(const std::vector<unsigned char>& data_point, int table_index);
 
 
-        std::vector<int> queryNNearestNeighbors(const std::vector<unsigned char>& query_point, int N);
-//    std::vector<int> queryNNearestNeighbors(const std::vector<unsigned char>& query_point, int N);
-//    std::vector<int> rangeSearch(const std::vector<unsigned char>& query_point, double R);
+    std::vector<int> rangeSearch(const std::vector<unsigned char>& query_point, double R);
+
+    std::vector<int> queryNNearestNeighbors(const std::vector<unsigned char>& query_point, int N);
+
 
 private:
     int k; // Number of hash functions
@@ -41,8 +40,10 @@ private:
     std::vector<std::vector<std::vector<int>>> hash_tables;
     std::vector<std::vector<std::pair<std::vector<double>, double>>> hash_functions;
 
-    int hashDataPoint(const std::vector<unsigned char>& data_point, int table_index);
-    std::vector<std::pair<std::vector<double>, double>> createHashFunctions(int nf, int nd) const;
+    int hashDataPoint(const std::vector<int>& hi_values);
+
+
+
 
 
 

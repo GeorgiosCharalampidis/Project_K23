@@ -53,8 +53,6 @@ int main(int argc,char* argv[]) {
         */
 
 
-
-
         // Create vector to store dataset
         std::string input = R"(C:\Users\test\CLionProjects\Project_K23\input.dat)";
         std::string query = R"(C:\Users\test\CLionProjects\Project_K23\query.dat)";
@@ -64,9 +62,21 @@ int main(int argc,char* argv[]) {
         std::vector<std::vector<unsigned char>> query_set = read_mnist_images(query, number_of_images,image_size);
 
         // Create the lsh object using parsed arguments
-        LSH lsh(dataset,query_set,4,5,784,15000,5,10000);
-        //lsh.buildIndex(dataset);
-        //lsh.printHashTables();
+        LSH lsh(dataset,query_set,4,5,784,15000,5,20000);
+        lsh.buildIndex(dataset);
+
+
+        /*
+        std::vector<int> in_range_indices = lsh.rangeSearch(query_set[0], 10000);
+        int counter=0;
+        for (int index : in_range_indices) {
+            std::cout << "Vector at index " << index << " is within range " << radius << std::endl;
+            counter++;
+        }
+        std::cout << "Total number of vectors within range " << radius << " is " << counter << std::endl;
+        */
+
+        lsh.printHashTables();
 
 
         // Continue with the rest of your lsh program
@@ -146,7 +156,7 @@ int main(int argc,char* argv[]) {
     lsh.printHashTables();
 
 
-    /*
+
 
     std::vector<int> nearest_neighbors_indices = lsh.queryNNearestNeighbors(testset[0], 8);
 
