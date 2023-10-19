@@ -7,7 +7,7 @@
 #include <limits>
 
 // Υπολογισμός της ευκλείδιας απόστασης μεταξύ δύο διανυσμάτων
-double euclideanDistance(const std::vector<unsigned char>& dataset, const std::vector<unsigned char>& query_set) {
+double euclideanDistance_(const std::vector<unsigned char>& dataset, const std::vector<unsigned char>& query_set) {
     if (dataset.size() != query_set.size()) {
         throw std::runtime_error("Vectors must have the same dimension for L2 distance calculation.");
     }
@@ -135,7 +135,7 @@ std::vector<std::vector<unsigned char>> Hypercube::kNearestNeighbors(const std::
     std::vector<int> candidateIndices = probe(q, k);
     std::vector<std::pair<double, std::vector<unsigned char>>> distanceAndPoints;
     for (const auto& index : candidateIndices) {
-        double distance = euclideanDistance(dataset[index], q);
+        double distance = euclideanDistance_(dataset[index], q);
         distanceAndPoints.push_back({distance, dataset[index]});
     }
 
@@ -153,7 +153,7 @@ std::vector<std::vector<unsigned char>> Hypercube::rangeSearch(const std::vector
     std::vector<int> candidateIndices = probe(q, k);
     std::vector<std::vector<unsigned char>> inRange;
     for (const auto& index : candidateIndices) {
-        double distance = euclideanDistance(dataset[index], q);
+        double distance = euclideanDistance_(dataset[index], q);
         if (distance <= R) {
             inRange.push_back(dataset[index]);
         }
