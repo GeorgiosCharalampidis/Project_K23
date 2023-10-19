@@ -12,8 +12,6 @@ public:
               int k, int num_dimensions, int N, double R, double w);
     ~Hypercube();
 
-    // Inserts a data point into the hypercube
-    void insert(const std::vector<double>& vec);
 
     // Queries the hypercube with a data point
     std::vector<std::vector<double>> query(const std::vector<double>& vec, int hammingThreshold);

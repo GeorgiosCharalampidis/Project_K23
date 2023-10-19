@@ -39,11 +39,6 @@ Hypercube::~Hypercube() {
     table_functions.clear();
 }
 
-void Hypercube::insert(const std::vector<double>& vec) {
-    // Implement insertion logic
-    // ...
-}
-
 std::vector<std::vector<double>> Hypercube::query(const std::vector<double>& vec, int hammingThreshold) {
     std::vector<int> candidateIndices = probe((const std::vector<unsigned char> &) vec, hammingThreshold);
 
