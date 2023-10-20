@@ -195,4 +195,5 @@ CMakeFiles/ProjectEm.dir/lsh.cpp.obj: \
  C:/Program\ Files/JetBrains/CLion\ 2023.2.2/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/deque.tcc \
  C:/Program\ Files/JetBrains/CLion\ 2023.2.2/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/stl_heap.h \
  C:/Program\ Files/JetBrains/CLion\ 2023.2.2/bin/mingw/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/bits/stl_queue.h \
- C:\Users\test\CLionProjects\Project_K23\lsh.h
+ C:\Users\test\CLionProjects\Project_K23\lsh.h \
+ C:\Users\test\CLionProjects\Project_K23\global_functions.h

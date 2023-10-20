@@ -152,6 +152,30 @@ Hypercube.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjectEm.dir\build.make CMakeFiles/ProjectEm.dir/Hypercube.cpp.s
 .PHONY : Hypercube.cpp.s
 
+global_functions.obj: global_functions.cpp.obj
+.PHONY : global_functions.obj
+
+# target to build an object file
+global_functions.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjectEm.dir\build.make CMakeFiles/ProjectEm.dir/global_functions.cpp.obj
+.PHONY : global_functions.cpp.obj
+
+global_functions.i: global_functions.cpp.i
+.PHONY : global_functions.i
+
+# target to preprocess a source file
+global_functions.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjectEm.dir\build.make CMakeFiles/ProjectEm.dir/global_functions.cpp.i
+.PHONY : global_functions.cpp.i
+
+global_functions.s: global_functions.cpp.s
+.PHONY : global_functions.s
+
+# target to generate assembly for a file
+global_functions.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjectEm.dir\build.make CMakeFiles/ProjectEm.dir/global_functions.cpp.s
+.PHONY : global_functions.cpp.s
+
 lsh.obj: lsh.cpp.obj
 .PHONY : lsh.obj
 
@@ -236,6 +260,9 @@ help:
 	@echo ... Hypercube.obj
 	@echo ... Hypercube.i
 	@echo ... Hypercube.s
+	@echo ... global_functions.obj
+	@echo ... global_functions.i
+	@echo ... global_functions.s
 	@echo ... lsh.obj
 	@echo ... lsh.i
 	@echo ... lsh.s

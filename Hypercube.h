@@ -9,18 +9,15 @@ class Hypercube {
 public:
     Hypercube(std::vector<std::vector<unsigned char>> dataset,
               const std::vector<std::vector<unsigned char>>& query,
-              int k, int num_dimensions, int N, double R, double w);
+              int k = 14, int num_dimensions = 784,int M=10,int probes=2, int N = 1, double R = 10000, int n = 60000);
     ~Hypercube();
 
 
-    // Queries the hypercube with a data point
-    std::vector<std::vector<double>> query(const std::vector<double>& vec, int hammingThreshold);
 
     // Builds the index for the given dataset
     void buildIndex(const std::vector<std::vector<unsigned char>>& data_set);
 
-
-    // Θα χρησιμοποιηθεί για την επιστροφή και των τριών μεταβλητών
+    // Structure to return results for nearest neighbors
     struct NearestNeighborsResult {
         std::vector<unsigned char> closestNeighbor;
         std::vector<std::vector<unsigned char>> NNearestNeighbors;
@@ -28,7 +25,6 @@ public:
     };
 
     NearestNeighborsResult findNearest(const std::vector<unsigned char>& q, int N, double R);
-
 
 private:
     // Calculates hash value for a given data point using hi values
@@ -46,12 +42,13 @@ private:
     // Creates hash functions for the hypercube
     std::vector<std::pair<std::vector<float>, float>> createHashFunctions(int k, int dim);
 
+    // Reduces the dimensionality of the data point using the random projection matrix
+    std::vector<float> reduceDimensionality(const std::vector<unsigned char>& data_point);
 
     std::vector<std::vector<unsigned char>> kNearestNeighbors(const std::vector<unsigned char>& q, int N);
     std::vector<std::vector<unsigned char>> rangeSearch(const std::vector<unsigned char>& q, double R);
 
-
-        // Member variables
+    // Member variables
     std::vector<std::vector<unsigned char>> dataset;
     const std::vector<std::vector<unsigned char>>& queryDataset;
     int k;
@@ -59,6 +56,10 @@ private:
     int N;
     double R;
     double w;
+    int reduced_dimension;
+    int M;
+    int probes;
+    std::vector<std::vector<float>> random_projection_matrix;
     std::vector<int> hash_table;
     std::vector<std::pair<std::vector<float>, float>> table_functions;
     std::mt19937 generator;

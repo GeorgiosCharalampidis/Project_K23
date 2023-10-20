@@ -9,4 +9,6 @@ add_executable(ProjectEm main.cpp minst.cpp
         lsh.cpp
         Hypercube.cpp
         Hypercube.h
+        global_functions.cpp
+        global_functions.h
 )

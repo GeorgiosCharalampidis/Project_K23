@@ -88,6 +88,12 @@
 		<Unit filename="C:/Users/test/CLionProjects/Project_K23/Hypercube.h">
 			<Option target="ProjectEm"/>
 		</Unit>
+		<Unit filename="C:/Users/test/CLionProjects/Project_K23/global_functions.cpp">
+			<Option target="ProjectEm"/>
+		</Unit>
+		<Unit filename="C:/Users/test/CLionProjects/Project_K23/global_functions.h">
+			<Option target="ProjectEm"/>
+		</Unit>
 		<Unit filename="C:/Users/test/CLionProjects/Project_K23/lsh.cpp">
 			<Option target="ProjectEm"/>
 		</Unit>

@@ -9,20 +9,8 @@
 
 #include <queue>
 #include "lsh.h"
+#include "global_functions.h"
 
-
-// Υπολογισμός της ευκλείδιας απόστασης μεταξύ δύο διανυσμάτων
-double euclideanDistance(const std::vector<unsigned char>& dataset, const std::vector<unsigned char>& query_set) {
-    if (dataset.size() != query_set.size()) {
-        throw std::runtime_error("Vectors must have the same dimension for L2 distance calculation.");
-    }
-    double distance = 0.0;
-    for (size_t i = 0; i < dataset.size(); ++i) {
-        double diff = static_cast<double>(dataset[i]) - static_cast<double>(query_set[i]);
-        distance += diff * diff;
-    }
-    return std::sqrt(distance);
-}
 
 // LSH Constructor
 LSH::LSH(std::vector<std::vector<unsigned char>> dataset,std::vector<std::vector<unsigned char>> query,int k, int L, int num_dimensions, int num_buckets, int N, double R)

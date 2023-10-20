@@ -3,15 +3,18 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <stdexcept>
+#include <cmath>
+#include <random>
 #include "minst.h"
 #include "lsh.h"
+#include "hypercube.h"
+
 
 
 int main(int argc,char* argv[]) {
 
     int number_of_images, image_size;
-
-
 
     if (argc < 2) {
         std::cerr << "Specify a mode: lsh or cube." << std::endl;
@@ -52,19 +55,22 @@ int main(int argc,char* argv[]) {
         std::cout << "radius = " << radius << std::endl;
         */
 
+        /*
 
         // Create vector to store dataset
         std::string input = R"(C:\Users\test\CLionProjects\Project_K23\input.dat)";
         std::string query = R"(C:\Users\test\CLionProjects\Project_K23\query.dat)";
         std::string outputPath = R"(C:\Users\test\CLionProjects\Project_K23\output.dat)";
 
-        std::vector<std::vector<unsigned char>> dataset = read_mnist_images(input, number_of_images, image_size);
-        std::vector<std::vector<unsigned char>> query_set = read_mnist_images(query, number_of_images,image_size);
+        */
+
+        std::vector<std::vector<unsigned char>> dataset = read_mnist_images(inputFile, number_of_images, image_size);
+        std::vector<std::vector<unsigned char>> query_set = read_mnist_images(queryFile, number_of_images,image_size);
 
         // Create the lsh object using parsed arguments
         LSH lsh(dataset,query_set,4,5,784,15000,5,20000);
         lsh.buildIndex(dataset);
-
+        lsh.printHashTables();
 
         /*
         std::vector<int> in_range_indices = lsh.rangeSearch(query_set[0], 10000);
@@ -76,13 +82,55 @@ int main(int argc,char* argv[]) {
         std::cout << "Total number of vectors within range " << radius << " is " << counter << std::endl;
         */
 
-        lsh.printHashTables();
+
 
 
         // Continue with the rest of your lsh program
         // ...
 
     }else if (mode == "./cube") {
+        std::string inputFile, queryFile, outputFile;
+        int k, M, probes, N;
+        double radius;
+        for (int i = 2; i < argc; ++i) {
+            if (strcmp(argv[i], "-d") == 0) {
+                inputFile = argv[++i];
+            } else if (strcmp(argv[i], "-q") == 0) {
+                queryFile = argv[++i];
+            } else if (strcmp(argv[i], "-k") == 0) {
+                k = std::stoi(argv[++i]);
+            } else if (strcmp(argv[i], "-M") == 0) {
+                M = std::stoi(argv[++i]);
+            } else if (strcmp(argv[i], "-probes") == 0) {
+                probes = std::stoi(argv[++i]);
+            } else if (strcmp(argv[i], "-o") == 0) {
+                outputFile = argv[++i];
+            } else if (strcmp(argv[i], "-N") == 0) {
+                N = std::stoi(argv[++i]);
+            } else if (strcmp(argv[i], "-R") == 0) {
+                radius = std::stod(argv[++i]);
+            }
+        }
+
+        // Print the values after the for loop
+        std::cout << "Input file: " << inputFile << std::endl;
+        std::cout << "Query file: " << queryFile << std::endl;
+        std::cout << "k: " << k << std::endl;
+        std::cout << "M: " << M << std::endl;
+        std::cout << "Probes: " << probes << std::endl;
+        std::cout << "Output file: " << outputFile << std::endl;
+        std::cout << "N: " << N << std::endl;
+        std::cout << "Radius: " << radius << std::endl;
+
+
+
+        std::vector<std::vector<unsigned char>> dataset = read_mnist_images(inputFile, number_of_images, image_size);
+        std::vector<std::vector<unsigned char>> query_set = read_mnist_images(queryFile, number_of_images,image_size);
+
+        Hypercube hypercube(dataset,query_set,k,784,M,probes,N,radius);
+
+        hypercube.buildIndex(dataset);
+
 
     } else {
         std::cerr << "Invalid mode: " << mode << std::endl;
