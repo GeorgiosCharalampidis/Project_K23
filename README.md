@@ -20,3 +20,14 @@ To lsh.cpp μην το κοιτάς πέρα από την ευκλείδια σ
 Nothing makes sense anymore. Im slowly but steadily losing my mind.
 
 I finally got rid of the fking segmentation fault.
+
+Το πρόγραμμα παίνρει πλέον τα παρακάτω arguments:
+
+1) ./lsh (έπειτα σου ζητάει το ίδιο τα απαραίτητα paths)
+2) ./cube (παρομοίως)
+3) ./lsh -d input.dat -q query.dat -k 4 -L 5 -ο output.dat -Ν 1 -R 10000
+4) ./cube -d input.dat -q query.dat -k 14 -Μ 10 -probes 2 -ο output.dat -Ν 1 -R 10000
+
+Στις επιλογές 3) κ 4) προφανώς ο χρήστης ορίζει τις δικές του μεταβλητές. Οι τιμές είναι απλά για παράδειγμα.
+Άλλωστε τα default values , έχουν περαστεί στους αντίστοιχους constructors.
+
