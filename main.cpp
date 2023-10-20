@@ -4,7 +4,7 @@
 #include <vector>
 #include "minst.h"
 #include "lsh.h"
-#include "hypercube.h"
+#include "Hypercube.h"
 
 int main(int argc, char* argv[]) {
 
