@@ -21,10 +21,12 @@ public:
 
     std::vector<int> rangeSearch(const std::vector<unsigned char>& query_point, double R);
 
-    std::vector<int> queryNNearestNeighbors(const std::vector<unsigned char>& query_point, int N);
+    std::vector<std::pair<int, double>> queryNNearestNeighbors(const std::vector<unsigned char>& query_point, int N);
+    std::vector<std::pair<int, double>> trueNNearestNeighbors(const std::vector<unsigned char>& query_point, int N);
 
 
-private:
+
+        private:
     int k; // Number of hash functions
     int L; // Number of hash tables
     int num_buckets; // Number of buckets

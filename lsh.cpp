@@ -6,6 +6,7 @@
 #include <cmath>
 #include <limits>
 #include <set>
+#include <algorithm>
 
 #include <queue>
 #include "lsh.h"
@@ -192,7 +193,7 @@ void LSH::printHashTables() const {
     }
 }
 
-std::vector<int> LSH::queryNNearestNeighbors(const std::vector<unsigned char>& query_point, int Number_of_Neighbors) {
+std::vector<std::pair<int, double>> LSH::queryNNearestNeighbors(const std::vector<unsigned char>& query_point, int Number_of_Neighbors) {
     std::priority_queue<std::pair<double, int>> nearest_neighbors_queue;
 
     for (int table_index = 0; table_index < L; ++table_index) {
@@ -205,14 +206,18 @@ std::vector<int> LSH::queryNNearestNeighbors(const std::vector<unsigned char>& q
         }
     }
 
-    std::vector<int> nearest_neighbors;
+    std::vector<std::pair<int, double>> nearest_neighbors;
     while (!nearest_neighbors_queue.empty() && nearest_neighbors.size() < Number_of_Neighbors) {
-        nearest_neighbors.push_back(nearest_neighbors_queue.top().second);
+        nearest_neighbors.push_back({nearest_neighbors_queue.top().second, nearest_neighbors_queue.top().first});
         nearest_neighbors_queue.pop();
     }
 
+    // Reverse the vector to have the closest neighbors at the beginning
+    std::reverse(nearest_neighbors.begin(), nearest_neighbors.end());
+
     return nearest_neighbors;
 }
+
 
 std::vector<int> LSH::rangeSearch(const std::vector<unsigned char>& query_point, double Radius) {
     std::set<int> candidates_within_radius; // Χρησιμοποιούμε το set για να αποφύγουμε διπλότυπα
@@ -238,4 +243,40 @@ std::vector<int> LSH::rangeSearch(const std::vector<unsigned char>& query_point,
     std::vector<int> result(candidates_within_radius.begin(), candidates_within_radius.end());
 
     return result;
+}
+std::vector<std::pair<int, double>> LSH::trueNNearestNeighbors(const std::vector<unsigned char>& query_point, int N) {
+    // Check for dataset's emptiness
+    if (dataset.empty()) {
+        throw std::runtime_error("Dataset is empty.");
+    }
+
+    if (N <= 0) {
+        throw std::invalid_argument("N must be positive.");
+    }
+
+    // Pair: distance, index. We use distance as the key for the priority queue.
+    std::priority_queue<std::pair<double, int>> max_heap;
+
+    for (int i = 0; i < dataset.size(); ++i) {
+        double distance = euclideanDistance(dataset[i], query_point);
+
+        // If we haven't yet found N neighbors, or the current point is closer than the farthest neighbor found so far.
+        if (max_heap.size() < N || distance < max_heap.top().first) {
+            if (max_heap.size() == N) {
+                max_heap.pop(); // Remove the farthest neighbor
+            }
+            max_heap.emplace(distance, i); // Add the current point
+        }
+    }
+
+    std::vector<std::pair<int, double>> nearest_neighbors;
+    while (!max_heap.empty()) {
+        nearest_neighbors.push_back({max_heap.top().second, max_heap.top().first});
+        max_heap.pop();
+    }
+
+    // The priority queue will order from largest to smallest distance. So, reverse for correct ordering.
+    std::reverse(nearest_neighbors.begin(), nearest_neighbors.end());
+
+    return nearest_neighbors;
 }

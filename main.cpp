@@ -2,6 +2,7 @@
 #include <cstring>
 #include <string>
 #include <vector>
+#include <chrono>
 #include "minst.h"
 #include "lsh.h"
 #include "Hypercube.h"
@@ -61,16 +62,44 @@ int main(int argc, char* argv[]) {
         //lsh.printHashTables();
         // Perform the N nearest neighbor search
 
-        //nearest neighbors of query_set[0] to query_set[10]
+        // LSH nearest neighbors of query_set[0] to query_set[10]
+        auto startLSH = std::chrono::high_resolution_clock::now(); // start timer
+
         for (int i = 0; i < 10; ++i) {
+
             // Find the nearest neighbors for the query point
-            std::vector<int> nearestNeighbors = lsh.queryNNearestNeighbors(query_set[i], numberOfNearest);
+            std::vector<std::pair<int, double>> nearestNeighbors = lsh.queryNNearestNeighbors(query_set[i], numberOfNearest);
+
             // Print the results
-            std::cout << "Nearest " << numberOfNearest << " neighbors of query_set[" << i << "]:" <<  std::endl;
-            for (int neighbor : nearestNeighbors) {
-                std::cout << "Neighbor in dataset[" << neighbor << "]" << std::endl;
+            std::cout << "\nLSH nearest " << numberOfNearest << " neighbors of query_set[" << i << "]:" << std::endl;
+            for (const auto& [index, distance] : nearestNeighbors) {
+                std::cout << "  Index: " << index << ", Distance: " << distance << std::endl;
             }
         }
+        auto endLSH = std::chrono::high_resolution_clock::now(); // end timer
+        double tLSH = std::chrono::duration<double, std::milli>(endLSH - startLSH).count() / 1000.0; // convert to seconds
+        std::cout << "tLSH: " << tLSH << " seconds" << std::endl;
+
+
+
+        // True nearest neighbors of query_set[0] to query_set[9]
+        auto startTrue = std::chrono::high_resolution_clock::now(); // start timer
+
+        for (int i = 0; i < 10; ++i) {
+            // Find the nearest neighbors for the query point
+            std::vector<std::pair<int, double>> trueNearestNeighbors = lsh.trueNNearestNeighbors(query_set[i], numberOfNearest);
+
+            // Print the results
+            std::cout << "\nTrue nearest " << numberOfNearest << " neighbors of query_set[" << i << "]:" << std::endl;
+            for (const auto& [index, distance] : trueNearestNeighbors) {
+                std::cout << "  Index: " << index << ", Distance: " << distance << std::endl;
+            }
+        }
+        auto endTrue = std::chrono::high_resolution_clock::now(); // end timer
+        double tTrue = std::chrono::duration<double, std::milli>(endTrue - startTrue).count() / 1000.0; // convert to seconds
+        std::cout << "tTrue: " << tTrue << " seconds" << std::endl;
+
+        /*
         // Range search for query_set[0] to query_set[10]
         for (int i = 0; i < 10; ++i) {
             // Find the nearest neighbors for the query point
@@ -78,9 +107,12 @@ int main(int argc, char* argv[]) {
             // Print the results
             std::cout << "Neighbors within range " << radius << " of query_set[" << i << "]:" <<  std::endl;
             for (int neighbor : withinRange) {
-                std::cout << "Neighbor in dataset[" << neighbor << "]" << std::endl;
+                std::cout << "  Neighbor in dataset[" << neighbor << "]" << std::endl;
             }
         }
+        */
+
+
 
     } else if (mode == "./cube") {
         if (argc == 2) {  // Only mode provided, prompt for paths
