@@ -43,6 +43,8 @@ int main(int argc, char* argv[]) {
                 }
             }
         }
+
+
         std::vector<std::vector<unsigned char>> dataset = read_mnist_images(inputFile, number_of_images, image_size);
 
         if (argc == 2) {
@@ -54,16 +56,16 @@ int main(int argc, char* argv[]) {
         }
 
         std::vector<std::vector<unsigned char>> query_set = read_mnist_images(queryFile, number_of_images,image_size);
-
         // Create the lsh object using parsed arguments
         LSH lsh(dataset,query_set,4,5,784,15000,5,20000);
         //lsh.printHashTables();
         // Perform the N nearest neighbor search
+
         std::vector<int> nearestNeighbors = lsh.queryNNearestNeighbors(query_set[0], numberOfNearest);
         // Print the results
         std::cout << "Nearest neighbors: " << std::endl;
         for (int neighbor : nearestNeighbors) {
-            std::cout << neighbor << std::endl;
+            std::cout << "Neighbor in " << neighbor << " index" << std::endl;
         }
 
 
