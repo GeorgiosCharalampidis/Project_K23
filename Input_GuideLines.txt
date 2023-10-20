@@ -1,6 +1,6 @@
-./lsh -d input.dat -q query.dat -k 4 -L 5 -ο output.dat -Ν 1 -R 10000
+./lsh -d input.dat -q query.dat -k 4 -L 5 -o output.dat -Ν 1 -R 10000
 
-./cube -d input.dat -q query.dat -k 14 -Μ 10 -probes 2 -ο output.dat -Ν 1 -R 10000
+./cube -d input.dat -q query.dat -k 14 -Μ 10 -probes 2 -o output.dat -Ν 1 -R 10000
 
 ./lsh 
 
