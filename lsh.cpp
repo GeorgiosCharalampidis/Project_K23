@@ -42,7 +42,7 @@ LSH::LSH(std::vector<std::vector<unsigned char>> dataset,std::vector<std::vector
 
     std::uniform_real_distribution<double> w_distribution(2.0, 6.0);
     w = w_distribution(generator);
-
+    buildIndex(this->dataset);
 }
 
 // LSH Destructor

@@ -7,8 +7,8 @@
 	- C:\Users\test\CLionProjects\Project_K23\input.dat
 	- C:\Users\test\CLionProjects\Project_K23\query.dat
 	- C:\Users\test\CLionProjects\Project_K23\output.dat
-
-	Putty
+		
+	Putty 
 
 	/home/users/sdi1600193/Project_K23/input.dat
 	/home/users/sdi1600193/Project_K23/query.dat
@@ -20,8 +20,8 @@
 	- C:\Users\test\CLionProjects\Project_K23\input.dat
 	- C:\Users\test\CLionProjects\Project_K23\query.dat
 	- C:\Users\test\CLionProjects\Project_K23\output.dat
-
-	Putty
+	
+	Putty 
 
 	/home/users/sdi1600193/Project_K23/input.dat
 	/home/users/sdi1600193/Project_K23/query.dat

@@ -57,8 +57,7 @@ int main(int argc, char* argv[]) {
 
         // Create the lsh object using parsed arguments
         LSH lsh(dataset,query_set,4,5,784,15000,5,20000);
-        lsh.buildIndex(dataset);
-        //lsh.printHashTables();
+        lsh.printHashTables();
 
     } else if (mode == "./cube") {
         if (argc == 2) {  // Only mode provided, prompt for paths
@@ -99,7 +98,6 @@ int main(int argc, char* argv[]) {
 
         Hypercube hypercube(dataset,query_set,k,784,M,probes,N,radius);
 
-        hypercube.buildIndex(dataset);
 
     } else {
         std::cerr << "Invalid mode: " << mode << std::endl;
