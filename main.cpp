@@ -76,7 +76,7 @@ int main(int argc, char* argv[]) {
             // Find the nearest neighbors for the query point
             std::vector<int> withinRange = lsh.rangeSearch(query_set[i], radius);
             // Print the results
-            std::cout << "Points within range " << radius << " of query_set[" << i << "]:" <<  std::endl;
+            std::cout << "Neighbors within range " << radius << " of query_set[" << i << "]:" <<  std::endl;
             for (int neighbor : withinRange) {
                 std::cout << "Neighbor in dataset[" << neighbor << "]" << std::endl;
             }
