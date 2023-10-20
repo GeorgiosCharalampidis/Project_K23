@@ -61,13 +61,26 @@ int main(int argc, char* argv[]) {
         //lsh.printHashTables();
         // Perform the N nearest neighbor search
 
-        std::vector<int> nearestNeighbors = lsh.queryNNearestNeighbors(query_set[0], numberOfNearest);
-        // Print the results
-        std::cout << "Nearest neighbors: " << std::endl;
-        for (int neighbor : nearestNeighbors) {
-            std::cout << "Neighbor in " << neighbor << " index" << std::endl;
+        //nearest neighbors of query_set[0] to query_set[10]
+        for (int i = 0; i < 10; ++i) {
+            // Find the nearest neighbors for the query point
+            std::vector<int> nearestNeighbors = lsh.queryNNearestNeighbors(query_set[i], numberOfNearest);
+            // Print the results
+            std::cout << "Nearest " << numberOfNearest << " neighbors of query_set[" << i << "]:" <<  std::endl;
+            for (int neighbor : nearestNeighbors) {
+                std::cout << "Neighbor in dataset[" << neighbor << "]" << std::endl;
+            }
         }
-
+        // Range search for query_set[0] to query_set[10]
+        for (int i = 0; i < 10; ++i) {
+            // Find the nearest neighbors for the query point
+            std::vector<int> withinRange = lsh.rangeSearch(query_set[i], radius);
+            // Print the results
+            std::cout << "Points within range " << radius << " of query_set[" << i << "]:" <<  std::endl;
+            for (int neighbor : withinRange) {
+                std::cout << "Neighbor in dataset[" << neighbor << "]" << std::endl;
+            }
+        }
 
     } else if (mode == "./cube") {
         if (argc == 2) {  // Only mode provided, prompt for paths
