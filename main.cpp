@@ -61,10 +61,9 @@ int main(int argc, char* argv[]) {
         std::vector<std::vector<unsigned char>> query_set = read_mnist_images(queryFile, number_of_images,image_size);
 
 
-        LSH lsh = (argc == 2) ? LSH(dataset, query_set) : LSH(dataset, query_set, k, L, numberOfNearest, radius);
+        LSH lsh = (argc == 2) ? LSH(dataset) : LSH(dataset, k, L, numberOfNearest, radius);
 
         numberOfNearest = lsh.returnN(); // Get the number of nearest neighbors from the LSH object
-        radius = lsh.returnR(); // Get the radius from the LSH object
         //lsh.printHashTables();
         // Perform the N nearest neighbor search
 
@@ -100,7 +99,7 @@ int main(int argc, char* argv[]) {
             std::cout << "tTrue: " << tTrue << " seconds" << std::endl;
 
             // Assuming the lsh.rangeSearch function is used for R-near neighbors and it returns indices of images within the radius
-            std::vector<int> withinRange = lsh.rangeSearch(query_set[i], radius);
+            std::vector<int> withinRange = lsh.rangeSearch(query_set[i]);
             std::cout << "R-near neighbors:" << std::endl;
             for (int neighbor : withinRange) {
                 std::cout << neighbor << std::endl;
@@ -144,11 +143,9 @@ int main(int argc, char* argv[]) {
 
         std::vector<std::vector<unsigned char>> query_set = read_mnist_images(queryFile, number_of_images,image_size);
 
-        Hypercube hypercube = (argc == 2) ? Hypercube(dataset, query_set) : Hypercube(dataset, query_set, k, M, probes, N, radius);
+        Hypercube hypercube = (argc == 2) ? Hypercube(dataset) : Hypercube(dataset,k, M, probes, N, radius);
 
         N = hypercube.returnN(); // Get the number of nearest neighbors from the Hypercube object
-        radius = hypercube.returnR(); // Get the radius from the Hypercube object
-
 
         std::ofstream outputFileStream("output.dat");
         if (!outputFileStream.is_open() || outputFileStream.fail()) {
@@ -184,7 +181,7 @@ int main(int argc, char* argv[]) {
             outputFileStream << "tTrue: " << tTrue << " seconds" << std::endl;
 
             // Assuming the hypercube.rangeSearch function is used for R-near neighbors and it returns indices of images within the radius
-            std::vector<int> withinRange = hypercube.rangeSearch(query_set[i], radius);
+            std::vector<int> withinRange = hypercube.rangeSearch(query_set[i]);
             outputFileStream << "R-near neighbors:" << std::endl;
 
             for (const auto& neighbor : withinRange) {

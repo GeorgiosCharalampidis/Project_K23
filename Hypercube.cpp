@@ -8,11 +8,9 @@
 #include "global_functions.h"  // Make sure this contains the computeDPrime function
 
 Hypercube::Hypercube(std::vector<std::vector<unsigned char>> dataset,
-                     const std::vector<std::vector<unsigned char>>& query,
                      int k,int M,int probes,
                      int N, double R)
         : dataset(std::move(dataset)),
-          queryDataset(query),
           k(k),
           M(M),probes(probes),
           N(N), R(R),
@@ -37,7 +35,7 @@ Hypercube::Hypercube(std::vector<std::vector<unsigned char>> dataset,
     std::uniform_real_distribution<double> w_distribution(2.0, 6.0);
     w = w_distribution(generator);
 
-    buildIndex(this->dataset);
+    buildIndex();
 
 }
 
@@ -45,9 +43,10 @@ Hypercube::~Hypercube() {
     table_functions.clear();
 }
 
-void Hypercube::buildIndex(const std::vector<std::vector<unsigned char>>& data_set) {
-    for (int i = 0; i < data_set.size(); ++i) {
-        int hash_value = hashDataPoint(calculateHiValues(data_set[i]));
+void Hypercube::buildIndex() {
+    std::cout << "Building index with dataset size: " << dataset.size() << std::endl;
+    for (int i = 0; i < dataset.size(); ++i) {
+        int hash_value = hashDataPoint(calculateHiValues(dataset[i]));
         hash_table[hash_value] = i;
     }
 }
@@ -67,7 +66,7 @@ std::vector<int> Hypercube::probe(const std::vector<unsigned char>& query_point,
         }
     }
 
-    return std::vector<int>(candidates.begin(), candidates.end());
+    return {candidates.begin(), candidates.end()};
 }
 
 int Hypercube::fi(int hi_value) {
@@ -88,21 +87,21 @@ int Hypercube::hashDataPoint(const std::vector<int>& hi_values) {
     return g_value;
 }
 
-std::vector<std::pair<std::vector<float>, float>> Hypercube::createHashFunctions(int k, int dim) {
-    std::vector<std::pair<std::vector<float>, float>> table_functions;
+std::vector<std::pair<std::vector<float>, float>> Hypercube::createHashFunctions(int k_, int dim) {
+    std::vector<std::pair<std::vector<float>, float>> table_functions_;
     std::normal_distribution<float> distribution(0.0, 1.0);
     std::uniform_real_distribution<float> offset_distribution(0.0, w);
 
-    for (int i = 0; i < k; ++i) {
+    for (int i = 0; i < k_; ++i) {
         std::vector<float> v;
         for (int j = 0; j < dim; ++j) {
             v.push_back(distribution(generator));
         }
         float t = offset_distribution(generator);
-        table_functions.push_back({v, t});
+        table_functions_.emplace_back(v, t);
     }
 
-    return table_functions;
+    return table_functions_;
 }
 
 std::vector<int> Hypercube::calculateHiValues(const std::vector<unsigned char>& data_point) {
@@ -139,7 +138,7 @@ std::vector<std::pair<int, double>> Hypercube::kNearestNeighbors(const std::vect
 
     std::vector<std::pair<int, double>> nearest_neighbors;
     while (!nearest_neighbors_queue.empty() && nearest_neighbors.size() < N) {
-        nearest_neighbors.push_back({nearest_neighbors_queue.top().second, nearest_neighbors_queue.top().first});
+        nearest_neighbors.emplace_back(nearest_neighbors_queue.top().second, nearest_neighbors_queue.top().first);
         nearest_neighbors_queue.pop();
     }
 
@@ -151,7 +150,7 @@ std::vector<std::pair<int, double>> Hypercube::kNearestNeighbors(const std::vect
 
 
 
-std::vector<int> Hypercube::rangeSearch(const std::vector<unsigned char>& q, double R) {
+std::vector<int> Hypercube::rangeSearch(const std::vector<unsigned char>& q) {
     std::vector<int> candidateIndices = probe(q, k);
     std::set<int> inRangeIndices; // Use a set to avoid duplicates
 
@@ -187,8 +186,4 @@ std::vector<float> Hypercube::reduceDimensionality(const std::vector<unsigned ch
 
 int Hypercube::returnN() const {
     return N;
-}
-
-int Hypercube::returnR() const {
-    return R;
 }

@@ -7,24 +7,24 @@
 
 class Hypercube {
 public:
-    Hypercube(std::vector<std::vector<unsigned char>> dataset,
-              const std::vector<std::vector<unsigned char>>& query,
+    explicit Hypercube(std::vector<std::vector<unsigned char>> dataset,
               int k = 14,int M=10,int probes=2, int N = 1, double R = 10000);
     ~Hypercube();
 
 
 
     // Builds the index for the given dataset
-    void buildIndex(const std::vector<std::vector<unsigned char>>& data_set);
 
 
     std::vector<std::pair<int, double>> kNearestNeighbors(const std::vector<unsigned char>& q);
-    std::vector<int> rangeSearch(const std::vector<unsigned char>& q, double R);
+    std::vector<int> rangeSearch(const std::vector<unsigned char>& q);
 
-    int returnN() const;
-    int returnR() const;
+    [[nodiscard]] int returnN() const;
 
 private:
+    void buildIndex();
+
+
     // Calculates hash value for a given data point using hi values
     int hashDataPoint(const std::vector<int>& hi_values);
 
@@ -47,7 +47,6 @@ private:
 
     // Member variables
     std::vector<std::vector<unsigned char>> dataset;
-    const std::vector<std::vector<unsigned char>>& queryDataset;
     int k;
     int num_dimensions = 784;
     int N;

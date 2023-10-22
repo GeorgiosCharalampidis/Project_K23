@@ -14,9 +14,8 @@
 
 
 // LSH Constructor
-LSH::LSH(std::vector<std::vector<unsigned char>> dataset,std::vector<std::vector<unsigned char>> query,int k, int L, int N, double R)
+LSH::LSH(std::vector<std::vector<unsigned char>> dataset,int k, int L, int N, double R)
         : dataset(std::move(dataset)),
-          query(std::move(query)),
           k(k), L(L),
           N(N), R(R),
           hash_tables(L, std::vector<std::vector<int>>(num_buckets)), // Ensure table has correct size initially
@@ -41,7 +40,7 @@ LSH::LSH(std::vector<std::vector<unsigned char>> dataset,std::vector<std::vector
 
     std::uniform_real_distribution<double> w_distribution(2.0, 6.0);
     w = w_distribution(generator);
-    buildIndex(this->dataset);
+    buildIndex();
 }
 
 // LSH Destructor
@@ -55,18 +54,18 @@ LSH::~LSH() {
     hash_functions.clear(); // Clear the vector of hash function tables
 }
 
-void LSH::buildIndex(const std::vector<std::vector<unsigned char>>& data_set) {
+void LSH::buildIndex() {
     // std::cout << "Building index with dataset size: " << dataset.size() << std::endl;
     for (auto& table : hash_tables) {
         table.resize(num_buckets);
     }
     // std::cout << "Resized hash_tables" << std::endl;
 
-    for (int i = 0; i < data_set.size(); ++i) {
+    for (int i = 0; i < dataset.size(); ++i) {
         // std::cout << "Processing dataset item: " << i << std::endl;
         for (int table_index = 0; table_index < L; ++table_index) {
             // std::cout << "Hashing for table: " << table_index << std::endl;
-            int hash_value = hashDataPoint(calculateHiValues(data_set[i], table_index));
+            int hash_value = hashDataPoint(calculateHiValues(dataset[i], table_index));
             // std::cout << "Hashed item " << i << " for table " << table_index << std::endl;
 
             try {
@@ -160,6 +159,7 @@ int LSH::hashDataPoint(const std::vector<int>& hi_values) {
     return g_value;
 }
 
+/*
 
 void LSH::printHashTables() const {
     for (int tableIndex = 0; tableIndex < L; ++tableIndex) {
@@ -178,6 +178,7 @@ void LSH::printHashTables() const {
         std::cout << std::endl;
     }
 }
+*/
 
 std::vector<std::pair<int, double>> LSH::queryNNearestNeighbors(const std::vector<unsigned char>& query_point) {
     std::priority_queue<std::pair<double, int>> nearest_neighbors_queue;
@@ -205,7 +206,7 @@ std::vector<std::pair<int, double>> LSH::queryNNearestNeighbors(const std::vecto
 }
 
 
-std::vector<int> LSH::rangeSearch(const std::vector<unsigned char>& query_point, double Radius) {
+std::vector<int> LSH::rangeSearch(const std::vector<unsigned char>& query_point) {
     std::set<int> candidates_within_radius; // Χρησιμοποιούμε το set για να αποφύγουμε διπλότυπα
 
     for (int table_index = 0; table_index < L; ++table_index) {
@@ -219,7 +220,7 @@ std::vector<int> LSH::rangeSearch(const std::vector<unsigned char>& query_point,
             double distance = euclideanDistance(dataset[candidate_index], query_point);
 
             // Check if the distance is within the desired range
-            if (distance <= Radius) {
+            if (distance <= R) {
                 candidates_within_radius.insert(candidate_index);
             }
         }
@@ -233,8 +234,4 @@ std::vector<int> LSH::rangeSearch(const std::vector<unsigned char>& query_point,
 
 int LSH::returnN() const {
     return N;
-}
-
-int LSH::returnR() const {
-    return R;
 }
