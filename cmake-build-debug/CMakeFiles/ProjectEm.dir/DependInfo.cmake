@@ -12,6 +12,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/Users/test/CLionProjects/Project_K23/global_functions.cpp" "CMakeFiles/ProjectEm.dir/global_functions.cpp.obj" "gcc" "CMakeFiles/ProjectEm.dir/global_functions.cpp.obj.d"
   "C:/Users/test/CLionProjects/Project_K23/lsh.cpp" "CMakeFiles/ProjectEm.dir/lsh.cpp.obj" "gcc" "CMakeFiles/ProjectEm.dir/lsh.cpp.obj.d"
   "C:/Users/test/CLionProjects/Project_K23/main.cpp" "CMakeFiles/ProjectEm.dir/main.cpp.obj" "gcc" "CMakeFiles/ProjectEm.dir/main.cpp.obj.d"
+  "C:/Users/test/CLionProjects/Project_K23/main_helper.cpp" "CMakeFiles/ProjectEm.dir/main_helper.cpp.obj" "gcc" "CMakeFiles/ProjectEm.dir/main_helper.cpp.obj.d"
   "C:/Users/test/CLionProjects/Project_K23/minst.cpp" "CMakeFiles/ProjectEm.dir/minst.cpp.obj" "gcc" "CMakeFiles/ProjectEm.dir/minst.cpp.obj.d"
   )
 

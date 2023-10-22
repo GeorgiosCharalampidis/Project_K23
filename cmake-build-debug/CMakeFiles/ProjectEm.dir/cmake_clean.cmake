@@ -7,6 +7,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/ProjectEm.dir/lsh.cpp.obj.d"
   "CMakeFiles/ProjectEm.dir/main.cpp.obj"
   "CMakeFiles/ProjectEm.dir/main.cpp.obj.d"
+  "CMakeFiles/ProjectEm.dir/main_helper.cpp.obj"
+  "CMakeFiles/ProjectEm.dir/main_helper.cpp.obj.d"
   "CMakeFiles/ProjectEm.dir/minst.cpp.obj"
   "CMakeFiles/ProjectEm.dir/minst.cpp.obj.d"
   "ProjectEm.exe"
