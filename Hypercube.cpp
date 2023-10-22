@@ -44,7 +44,6 @@ Hypercube::~Hypercube() {
 }
 
 void Hypercube::buildIndex() {
-    std::cout << "Building index with dataset size: " << dataset.size() << std::endl;
     for (int i = 0; i < dataset.size(); ++i) {
         int hash_value = hashDataPoint(calculateHiValues(dataset[i]));
         hash_table[hash_value] = i;

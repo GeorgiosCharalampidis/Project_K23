@@ -224,6 +224,30 @@ main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjectEm.dir\build.make CMakeFiles/ProjectEm.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+main_helper.obj: main_helper.cpp.obj
+.PHONY : main_helper.obj
+
+# target to build an object file
+main_helper.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjectEm.dir\build.make CMakeFiles/ProjectEm.dir/main_helper.cpp.obj
+.PHONY : main_helper.cpp.obj
+
+main_helper.i: main_helper.cpp.i
+.PHONY : main_helper.i
+
+# target to preprocess a source file
+main_helper.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjectEm.dir\build.make CMakeFiles/ProjectEm.dir/main_helper.cpp.i
+.PHONY : main_helper.cpp.i
+
+main_helper.s: main_helper.cpp.s
+.PHONY : main_helper.s
+
+# target to generate assembly for a file
+main_helper.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjectEm.dir\build.make CMakeFiles/ProjectEm.dir/main_helper.cpp.s
+.PHONY : main_helper.cpp.s
+
 minst.obj: minst.cpp.obj
 .PHONY : minst.obj
 
@@ -269,6 +293,9 @@ help:
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s
+	@echo ... main_helper.obj
+	@echo ... main_helper.i
+	@echo ... main_helper.s
 	@echo ... minst.obj
 	@echo ... minst.i
 	@echo ... minst.s

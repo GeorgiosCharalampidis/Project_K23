@@ -103,6 +103,12 @@
 		<Unit filename="C:/Users/test/CLionProjects/Project_K23/main.cpp">
 			<Option target="ProjectEm"/>
 		</Unit>
+		<Unit filename="C:/Users/test/CLionProjects/Project_K23/main_helper.cpp">
+			<Option target="ProjectEm"/>
+		</Unit>
+		<Unit filename="C:/Users/test/CLionProjects/Project_K23/main_helper.h">
+			<Option target="ProjectEm"/>
+		</Unit>
 		<Unit filename="C:/Users/test/CLionProjects/Project_K23/minst.cpp">
 			<Option target="ProjectEm"/>
 		</Unit>
