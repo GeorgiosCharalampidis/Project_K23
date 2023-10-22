@@ -4,16 +4,16 @@
 #include <cmath>
 #include <set>
 #include <algorithm>
-#include <limits>
+#include <queue>
 #include "global_functions.h"  // Make sure this contains the computeDPrime function
 
 Hypercube::Hypercube(std::vector<std::vector<unsigned char>> dataset,
                      const std::vector<std::vector<unsigned char>>& query,
-                     int k, int num_dimensions,int M,int probes,
-                     int N, double R, int n)
+                     int k,int M,int probes,
+                     int N, double R)
         : dataset(std::move(dataset)),
           queryDataset(query),
-          k(k), num_dimensions(num_dimensions),
+          k(k),
           M(M),probes(probes),
           N(N), R(R),
           hash_table(1 << k, -1),
@@ -127,35 +127,33 @@ std::vector<int> Hypercube::calculateHiValues(const std::vector<unsigned char>& 
     return hi_values;
 }
 
-std::vector<std::vector<unsigned char>> Hypercube::kNearestNeighbors(const std::vector<unsigned char>& q, int N) {
+std::vector<std::pair<int, double>> Hypercube::kNearestNeighbors(const std::vector<unsigned char>& q) {
+    std::priority_queue<std::pair<double, int>> nearest_neighbors_queue;
+
     std::vector<int> candidateIndices = probe(q, k);
 
-    std::vector<std::pair<double, std::vector<unsigned char>>> distanceAndPoints;
-
-    int candidates_checked = 0;
     for (const auto& index : candidateIndices) {
-        if (candidates_checked >= M) break;
-
         double distance = euclideanDistance(dataset[index], q);
-        distanceAndPoints.push_back({distance, dataset[index]});
-
-        candidates_checked++;
+        nearest_neighbors_queue.emplace(distance, index);
     }
 
-    std::sort(distanceAndPoints.begin(), distanceAndPoints.end());
-
-    std::vector<std::vector<unsigned char>> kNearest;
-    for (int i = 0; i < std::min(N, static_cast<int>(distanceAndPoints.size())); ++i) {
-        kNearest.push_back(distanceAndPoints[i].second);
+    std::vector<std::pair<int, double>> nearest_neighbors;
+    while (!nearest_neighbors_queue.empty() && nearest_neighbors.size() < N) {
+        nearest_neighbors.push_back({nearest_neighbors_queue.top().second, nearest_neighbors_queue.top().first});
+        nearest_neighbors_queue.pop();
     }
 
-    return kNearest;
+    // Reverse the vector to have the closest neighbors at the beginning
+    std::reverse(nearest_neighbors.begin(), nearest_neighbors.end());
+
+    return nearest_neighbors;
 }
 
 
-std::vector<std::vector<unsigned char>> Hypercube::rangeSearch(const std::vector<unsigned char>& q, double R) {
+
+std::vector<int> Hypercube::rangeSearch(const std::vector<unsigned char>& q, double R) {
     std::vector<int> candidateIndices = probe(q, k);
-    std::vector<std::vector<unsigned char>> inRange;
+    std::set<int> inRangeIndices; // Use a set to avoid duplicates
 
     int candidates_checked = 0;
     for (const auto& index : candidateIndices) {
@@ -163,22 +161,19 @@ std::vector<std::vector<unsigned char>> Hypercube::rangeSearch(const std::vector
 
         double distance = euclideanDistance(dataset[index], q);
         if (distance <= R) {
-            inRange.push_back(dataset[index]);
+            inRangeIndices.insert(index);
         }
 
         candidates_checked++;
     }
 
-    return inRange;
-}
+    // Convert the set to a vector for the final result
+    std::vector<int> result(inRangeIndices.begin(), inRangeIndices.end());
 
-Hypercube::NearestNeighborsResult Hypercube::findNearest(const std::vector<unsigned char>& q, int N, double R) {
-    NearestNeighborsResult result;
-    result.closestNeighbor = kNearestNeighbors(q, 1)[0];
-    result.NNearestNeighbors = kNearestNeighbors(q, N);
-    result.withinRange = rangeSearch(q, R);
     return result;
 }
+
+
 
 std::vector<float> Hypercube::reduceDimensionality(const std::vector<unsigned char>& data_point) {
     std::vector<float> reduced_point(reduced_dimension, 0.0);
@@ -188,4 +183,12 @@ std::vector<float> Hypercube::reduceDimensionality(const std::vector<unsigned ch
         }
     }
     return reduced_point;
+}
+
+int Hypercube::returnN() const {
+    return N;
+}
+
+int Hypercube::returnR() const {
+    return R;
 }

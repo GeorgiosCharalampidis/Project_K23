@@ -9,7 +9,7 @@ class Hypercube {
 public:
     Hypercube(std::vector<std::vector<unsigned char>> dataset,
               const std::vector<std::vector<unsigned char>>& query,
-              int k = 14, int num_dimensions = 784,int M=10,int probes=2, int N = 1, double R = 10000, int n = 60000);
+              int k = 14,int M=10,int probes=2, int N = 1, double R = 10000);
     ~Hypercube();
 
 
@@ -17,14 +17,12 @@ public:
     // Builds the index for the given dataset
     void buildIndex(const std::vector<std::vector<unsigned char>>& data_set);
 
-    // Structure to return results for nearest neighbors
-    struct NearestNeighborsResult {
-        std::vector<unsigned char> closestNeighbor;
-        std::vector<std::vector<unsigned char>> NNearestNeighbors;
-        std::vector<std::vector<unsigned char>> withinRange;
-    };
 
-    NearestNeighborsResult findNearest(const std::vector<unsigned char>& q, int N, double R);
+    std::vector<std::pair<int, double>> kNearestNeighbors(const std::vector<unsigned char>& q);
+    std::vector<int> rangeSearch(const std::vector<unsigned char>& q, double R);
+
+    int returnN() const;
+    int returnR() const;
 
 private:
     // Calculates hash value for a given data point using hi values
@@ -45,19 +43,19 @@ private:
     // Reduces the dimensionality of the data point using the random projection matrix
     std::vector<float> reduceDimensionality(const std::vector<unsigned char>& data_point);
 
-    std::vector<std::vector<unsigned char>> kNearestNeighbors(const std::vector<unsigned char>& q, int N);
-    std::vector<std::vector<unsigned char>> rangeSearch(const std::vector<unsigned char>& q, double R);
+
 
     // Member variables
     std::vector<std::vector<unsigned char>> dataset;
     const std::vector<std::vector<unsigned char>>& queryDataset;
     int k;
-    int num_dimensions;
+    int num_dimensions = 784;
     int N;
     double R;
     double w;
     int reduced_dimension;
     int M;
+    int n=60000;
     int probes;
     std::vector<std::vector<float>> random_projection_matrix;
     std::vector<int> hash_table;

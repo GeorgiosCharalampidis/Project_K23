@@ -4,9 +4,9 @@
 
 ./lsh 
 
-	- C:\Users\test\CLionProjects\Project_K23\input.dat
-	- C:\Users\test\CLionProjects\Project_K23\query.dat
-	- C:\Users\test\CLionProjects\Project_K23\output.dat
+	C:\Users\test\CLionProjects\Project_K23\input.dat
+	C:\Users\test\CLionProjects\Project_K23\query.dat
+	C:\Users\test\CLionProjects\Project_K23\output.dat
 		
 	Putty 
 

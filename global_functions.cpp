@@ -3,6 +3,8 @@
 #include <cmath>
 #include <stdexcept>
 #include <random>
+#include <algorithm>
+#include <queue>
 
 
 //
@@ -34,5 +36,42 @@ int computeDPrime(int n) {
     return dist(mt);
 }
 
+std::vector<std::pair<int, double>> trueNNearestNeighbors(const std::vector<std::vector<unsigned char>>& dataset,
+                                                          const std::vector<unsigned char>& query_point, int N) {
+    // Check for dataset's emptiness
+    if (dataset.empty()) {
+        throw std::runtime_error("Dataset is empty.");
+    }
+
+    if (N <= 0) {
+        throw std::invalid_argument("N must be positive.");
+    }
+
+    // Pair: distance, index. We use distance as the key for the priority queue.
+    std::priority_queue<std::pair<double, int>> max_heap;
+
+    for (int i = 0; i < dataset.size(); ++i) {
+        double distance = euclideanDistance(dataset[i], query_point);
+
+        // If we haven't yet found N neighbors, or the current point is closer than the farthest neighbor found so far.
+        if (max_heap.size() < N || distance < max_heap.top().first) {
+            if (max_heap.size() == N) {
+                max_heap.pop(); // Remove the farthest neighbor
+            }
+            max_heap.emplace(distance, i); // Add the current point
+        }
+    }
+
+    std::vector<std::pair<int, double>> nearest_neighbors;
+    while (!max_heap.empty()) {
+        nearest_neighbors.emplace_back(max_heap.top().second, max_heap.top().first);
+        max_heap.pop();
+    }
+
+    // The priority queue will order from largest to smallest distance. So, reverse for correct ordering.
+    std::reverse(nearest_neighbors.begin(), nearest_neighbors.end());
+
+    return nearest_neighbors;
+}
 
 

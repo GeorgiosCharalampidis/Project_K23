@@ -14,12 +14,10 @@
 
 
 // LSH Constructor
-LSH::LSH(std::vector<std::vector<unsigned char>> dataset,std::vector<std::vector<unsigned char>> query,int k, int L, int num_dimensions, int num_buckets, int N, double R)
+LSH::LSH(std::vector<std::vector<unsigned char>> dataset,std::vector<std::vector<unsigned char>> query,int k, int L, int N, double R)
         : dataset(std::move(dataset)),
           query(std::move(query)),
           k(k), L(L),
-          num_dimensions(num_dimensions),
-          num_buckets(num_buckets),
           N(N), R(R),
           hash_tables(L, std::vector<std::vector<int>>(num_buckets)), // Ensure table has correct size initially
           hash_functions(L)
@@ -162,18 +160,6 @@ int LSH::hashDataPoint(const std::vector<int>& hi_values) {
     return g_value;
 }
 
-int LSH::countItemsInAllBuckets() const {
-    int total_count = 0;
-
-    // count items in all buckets
-    for (int tableIndex = 0; tableIndex < L; ++tableIndex) {
-        for (int bucketIndex = 0; bucketIndex < (num_buckets); ++bucketIndex) {
-            const std::vector<int>& bucket = hash_tables[tableIndex][bucketIndex];
-            total_count += bucket.size();
-        }
-    }
-    return total_count;
-}
 
 void LSH::printHashTables() const {
     for (int tableIndex = 0; tableIndex < L; ++tableIndex) {
@@ -193,7 +179,7 @@ void LSH::printHashTables() const {
     }
 }
 
-std::vector<std::pair<int, double>> LSH::queryNNearestNeighbors(const std::vector<unsigned char>& query_point, int Number_of_Neighbors) {
+std::vector<std::pair<int, double>> LSH::queryNNearestNeighbors(const std::vector<unsigned char>& query_point) {
     std::priority_queue<std::pair<double, int>> nearest_neighbors_queue;
 
     for (int table_index = 0; table_index < L; ++table_index) {
@@ -207,8 +193,8 @@ std::vector<std::pair<int, double>> LSH::queryNNearestNeighbors(const std::vecto
     }
 
     std::vector<std::pair<int, double>> nearest_neighbors;
-    while (!nearest_neighbors_queue.empty() && nearest_neighbors.size() < Number_of_Neighbors) {
-        nearest_neighbors.push_back({nearest_neighbors_queue.top().second, nearest_neighbors_queue.top().first});
+    while (!nearest_neighbors_queue.empty() && nearest_neighbors.size() < N) {
+        nearest_neighbors.emplace_back(nearest_neighbors_queue.top().second, nearest_neighbors_queue.top().first);
         nearest_neighbors_queue.pop();
     }
 
@@ -244,39 +230,11 @@ std::vector<int> LSH::rangeSearch(const std::vector<unsigned char>& query_point,
 
     return result;
 }
-std::vector<std::pair<int, double>> LSH::trueNNearestNeighbors(const std::vector<unsigned char>& query_point, int N) {
-    // Check for dataset's emptiness
-    if (dataset.empty()) {
-        throw std::runtime_error("Dataset is empty.");
-    }
 
-    if (N <= 0) {
-        throw std::invalid_argument("N must be positive.");
-    }
+int LSH::returnN() const {
+    return N;
+}
 
-    // Pair: distance, index. We use distance as the key for the priority queue.
-    std::priority_queue<std::pair<double, int>> max_heap;
-
-    for (int i = 0; i < dataset.size(); ++i) {
-        double distance = euclideanDistance(dataset[i], query_point);
-
-        // If we haven't yet found N neighbors, or the current point is closer than the farthest neighbor found so far.
-        if (max_heap.size() < N || distance < max_heap.top().first) {
-            if (max_heap.size() == N) {
-                max_heap.pop(); // Remove the farthest neighbor
-            }
-            max_heap.emplace(distance, i); // Add the current point
-        }
-    }
-
-    std::vector<std::pair<int, double>> nearest_neighbors;
-    while (!max_heap.empty()) {
-        nearest_neighbors.push_back({max_heap.top().second, max_heap.top().first});
-        max_heap.pop();
-    }
-
-    // The priority queue will order from largest to smallest distance. So, reverse for correct ordering.
-    std::reverse(nearest_neighbors.begin(), nearest_neighbors.end());
-
-    return nearest_neighbors;
+int LSH::returnR() const {
+    return R;
 }

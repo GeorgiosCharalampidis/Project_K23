@@ -1,0 +1,240 @@
+
+Query: 0
+Nearest neighbor-1: 59936
+distanceHypercube: 2689.01
+distanceTrue: 676.584
+Nearest neighbor-2: 45630
+distanceHypercube: 2956.27
+distanceTrue: 793.987
+Nearest neighbor-3: 56522
+distanceHypercube: 3034.25
+distanceTrue: 862.677
+tHypercube: 0.0001423 seconds
+tTrue: 0.24144 seconds
+R-near neighbors:
+641
+18621
+41328
+41673
+45288
+45630
+46011
+49638
+50387
+51675
+
+Query: 1
+Nearest neighbor-1: 51165
+distanceHypercube: 3163.03
+distanceTrue: 1162.93
+Nearest neighbor-2: 55791
+distanceHypercube: 3199.8
+distanceTrue: 1211.84
+Nearest neighbor-3: 47789
+distanceHypercube: 3316.72
+distanceTrue: 1285.93
+tHypercube: 0.0001182 seconds
+tTrue: 0.223478 seconds
+R-near neighbors:
+6835
+25825
+34522
+36982
+38295
+41494
+42500
+45280
+45867
+47789
+
+Query: 2
+Nearest neighbor-1: 59063
+distanceHypercube: 2709.35
+distanceTrue: 321.663
+Nearest neighbor-2: 37304
+distanceHypercube: 2800.53
+distanceTrue: 332.464
+Nearest neighbor-3: 40888
+distanceHypercube: 3640.29
+distanceTrue: 341.048
+tHypercube: 0.0001301 seconds
+tTrue: 0.235009 seconds
+R-near neighbors:
+12302
+25880
+30005
+37304
+40888
+43467
+51964
+53127
+57131
+58869
+
+Query: 3
+Nearest neighbor-1: 53550
+distanceHypercube: 2969.85
+distanceTrue: 1221.58
+Nearest neighbor-2: 58928
+distanceHypercube: 3034.98
+distanceTrue: 1228.23
+Nearest neighbor-3: 27514
+distanceHypercube: 3125.4
+distanceTrue: 1238.34
+tHypercube: 0.0001236 seconds
+tTrue: 0.223669 seconds
+R-near neighbors:
+12692
+27514
+29609
+38338
+42528
+44112
+51301
+53550
+54643
+54688
+
+Query: 4
+Nearest neighbor-1: 59793
+distanceHypercube: 2778.95
+distanceTrue: 1092.53
+Nearest neighbor-2: 53117
+distanceHypercube: 2789.86
+distanceTrue: 1096.05
+Nearest neighbor-3: 54587
+distanceHypercube: 3046.85
+distanceTrue: 1169.34
+tHypercube: 0.0001218 seconds
+tTrue: 0.222039 seconds
+R-near neighbors:
+12918
+16541
+19840
+23963
+27848
+33938
+43031
+43216
+50534
+51922
+
+Query: 5
+Nearest neighbor-1: 34480
+distanceHypercube: 2769.27
+distanceTrue: 298.124
+Nearest neighbor-2: 1590
+distanceHypercube: 2812.54
+distanceTrue: 312.122
+Nearest neighbor-3: 42732
+distanceHypercube: 2845.76
+distanceTrue: 373.042
+tHypercube: 0.0001249 seconds
+tTrue: 0.247456 seconds
+R-near neighbors:
+1590
+6712
+10179
+34480
+34761
+42412
+42732
+51128
+53762
+54208
+
+Query: 6
+Nearest neighbor-1: 54846
+distanceHypercube: 2722.22
+distanceTrue: 1302.71
+Nearest neighbor-2: 50745
+distanceHypercube: 2729.36
+distanceTrue: 1357.01
+Nearest neighbor-3: 59039
+distanceHypercube: 2786.65
+distanceTrue: 1469.77
+tHypercube: 0.0001193 seconds
+tTrue: 0.23148 seconds
+R-near neighbors:
+23346
+31478
+33348
+33918
+43937
+44948
+45559
+50745
+50807
+50892
+
+Query: 7
+Nearest neighbor-1: 57255
+distanceHypercube: 2714.47
+distanceTrue: 1289.7
+Nearest neighbor-2: 57407
+distanceHypercube: 2777.13
+distanceTrue: 1396
+Nearest neighbor-3: 45753
+distanceHypercube: 2793.62
+distanceTrue: 1407.51
+tHypercube: 0.0001185 seconds
+tTrue: 0.241631 seconds
+R-near neighbors:
+1274
+34052
+36070
+45183
+45337
+45483
+45552
+45753
+46506
+49509
+
+Query: 8
+Nearest neighbor-1: 38862
+distanceHypercube: 2854.22
+distanceTrue: 1735.34
+Nearest neighbor-2: 53493
+distanceHypercube: 3052.34
+distanceTrue: 1739.14
+Nearest neighbor-3: 54531
+distanceHypercube: 3135.76
+distanceTrue: 1797.21
+tHypercube: 0.0001245 seconds
+tTrue: 0.267918 seconds
+R-near neighbors:
+32709
+36171
+36961
+38862
+45729
+47746
+48346
+48913
+53493
+54531
+
+Query: 9
+Nearest neighbor-1: 54999
+distanceHypercube: 2860.99
+distanceTrue: 991.598
+Nearest neighbor-2: 48302
+distanceHypercube: 2974.63
+distanceTrue: 1146.71
+Nearest neighbor-3: 56927
+distanceHypercube: 3093.31
+distanceTrue: 1179.64
+tHypercube: 0.0001531 seconds
+tTrue: 0.235036 seconds
+R-near neighbors:
+1485
+14427
+32093
+34342
+39756
+44913
+45529
+48302
+54227
+54999
