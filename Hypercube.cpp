@@ -14,11 +14,11 @@ Hypercube::Hypercube(std::vector<std::vector<unsigned char>> dataset,
           k(k),
           M(M),probes(probes),
           N(N), R(R),
-          hash_table(1 << k, -1),
+          hash_table(1 << k, -1), // 2^k buckets
           table_functions(createHashFunctions(k, computeDPrime(n)))
 {
     generator = std::mt19937(std::random_device{}());
-    reduced_dimension = computeDPrime(n); // Computed based on the function you mentioned
+    reduced_dimension = computeDPrime(n); 
 
     // Create the random projection matrix
     std::normal_distribution<float> distribution(0.0, 1.0);

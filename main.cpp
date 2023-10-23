@@ -3,15 +3,42 @@
 #include <sstream>
 #include <cstring>
 #include <vector>
-#include "main_helper.h"
+#include "KMeansPLusPlus.h"
+#include "minst.h"
 
 
+
+
+int main() {
+
+    int number_of_images, image_size;
+
+// Create vector to store dataset
+    std::string input = R"(C:\Users\test\CLionProjects\Project_K23\input.dat)";
+    std::string query = R"(C:\Users\test\CLionProjects\Project_K23\query.dat)";
+    std::string outputPath = R"(C:\Users\test\CLionProjects\Project_K23\output.dat)";
+
+    std::vector<std::vector<unsigned char>> dataset = read_mnist_images(input, number_of_images, image_size);
+    std::vector<std::vector<unsigned char>> query_set = read_mnist_images(query, number_of_images,image_size);
+
+    // Create a Test_Set with the first 100 images of the dataset
+    std::vector<std::vector<unsigned char>> test_set(dataset.begin(), dataset.begin() + 500);
+
+
+    // Create the cluster
+    KMeansPlusPlus plus(dataset, 5);
+
+
+    return 0;
+}
+
+
+/*
 int main(int argc, char* argv[]) {
     if (argc < 2) {
         std::cerr << "Specify a mode: lsh or cube." << std::endl;
         return 1;
     }
-
     std::string mode = argv[1];
     char decision;
 
@@ -60,3 +87,4 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
+ */

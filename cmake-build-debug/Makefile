@@ -152,6 +152,30 @@ Hypercube.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjectEm.dir\build.make CMakeFiles/ProjectEm.dir/Hypercube.cpp.s
 .PHONY : Hypercube.cpp.s
 
+KMeansPLusPlus.obj: KMeansPLusPlus.cpp.obj
+.PHONY : KMeansPLusPlus.obj
+
+# target to build an object file
+KMeansPLusPlus.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjectEm.dir\build.make CMakeFiles/ProjectEm.dir/KMeansPLusPlus.cpp.obj
+.PHONY : KMeansPLusPlus.cpp.obj
+
+KMeansPLusPlus.i: KMeansPLusPlus.cpp.i
+.PHONY : KMeansPLusPlus.i
+
+# target to preprocess a source file
+KMeansPLusPlus.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjectEm.dir\build.make CMakeFiles/ProjectEm.dir/KMeansPLusPlus.cpp.i
+.PHONY : KMeansPLusPlus.cpp.i
+
+KMeansPLusPlus.s: KMeansPLusPlus.cpp.s
+.PHONY : KMeansPLusPlus.s
+
+# target to generate assembly for a file
+KMeansPLusPlus.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjectEm.dir\build.make CMakeFiles/ProjectEm.dir/KMeansPLusPlus.cpp.s
+.PHONY : KMeansPLusPlus.cpp.s
+
 global_functions.obj: global_functions.cpp.obj
 .PHONY : global_functions.obj
 
@@ -284,6 +308,9 @@ help:
 	@echo ... Hypercube.obj
 	@echo ... Hypercube.i
 	@echo ... Hypercube.s
+	@echo ... KMeansPLusPlus.obj
+	@echo ... KMeansPLusPlus.i
+	@echo ... KMeansPLusPlus.s
 	@echo ... global_functions.obj
 	@echo ... global_functions.i
 	@echo ... global_functions.s

@@ -9,9 +9,9 @@
 #include "minst.h"
 #include "lsh.h"
 #include "Hypercube.h"
+#include "KMeansPlusPlus.h"
 #include "global_functions.h"
 #include "main_helper.h"
-
 
 void handleLSHMode(const std::vector<std::string>& args, int argc) {
     std::string inputFile, queryFile, outputFile;
@@ -193,4 +193,51 @@ void handleCubeMode(const std::vector<std::string>& args, int argc) {
     outputFileStream.flush();  // Ensure all data is written
     outputFileStream.close();  // Close the file
 }
+
+void handleClusterMode () {
+    std::string inputFile,outputFile;
+    int k, L, number_of_images, image_size;
+
+    std::cout << "Enter the path to the dataset: ";
+    std::cin >> inputFile;
+
+    std::cout << "Enter the path for output file: ";
+    std::cin >> outputFile;
+
+    std::vector<std::vector<unsigned char>> dataset = read_mnist_images(inputFile, number_of_images, image_size);
+
+    std::cout << "Enter the number of clusters: ";
+    std::cin >> k;
+
+    std::cout << "Enter the number of hash tables: ";
+    std::cin >> L;
+
+    std::ofstream outputFileStream(outputFile);
+    if (!outputFileStream.is_open() || outputFileStream.fail()) {
+        std::cerr << "Failed to open output.dat for writing." << std::endl;
+        return;
+    }
+
+    // Perform the clustering
+    KMeansPlusPlus kMeansPlusPlus(dataset, k);
+
+    /*
+
+    // Print the kMeansPlusPlus
+    for (int i = 0; i < k; ++i) {
+        std::cout << "CLUSTER-" << i << " {size: " << kMeansPlusPlus.getClusterSize(i) << ", centroid: [";
+        for (int j = 0; j < image_size; ++j) {
+            std::cout << kMeansPlusPlus.getClusterCentroid(i)[j];
+            if (j != image_size - 1) {
+                std::cout << ", ";
+            }
+        }
+        std::cout << "]}" << std::endl;
+    }
+    */
+
+}
+
+
+
 

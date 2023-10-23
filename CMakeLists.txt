@@ -13,4 +13,6 @@ add_executable(ProjectEm main.cpp minst.cpp
         global_functions.h
         main_helper.cpp
         main_helper.h
+        KMeansPLusPlus.cpp
+        KMeansPLusPlus.h
 )
