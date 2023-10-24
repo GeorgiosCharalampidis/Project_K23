@@ -25,24 +25,26 @@ double KMeansPlusPlus::minDistanceToCentroid(const std::vector<unsigned char>& p
 }
 
 int KMeansPlusPlus::getNextCentroidIndex(const std::vector<double>& squaredDistances) {
-    double total = std::accumulate(squaredDistances.begin(), squaredDistances.end(), 0.0);
+    std::vector<double> partialSums(squaredDistances.size(), 0.0);
+    partialSums[0] = squaredDistances[0];
+
+    // Compute the partial sums
+    for (size_t i = 1; i < squaredDistances.size(); ++i) {
+        partialSums[i] = partialSums[i-1] + squaredDistances[i];
+    }
+
+    double total = partialSums.back();
 
     std::random_device rd;
     std::mt19937 mt(rd());
     std::uniform_real_distribution<double> dist(0.0, total);
     double randomValue = dist(mt);
 
-    double accumulatedDistance = 0.0;
-    size_t index = 0;
-    for (size_t i = 0; i < squaredDistances.size(); ++i) {
-        accumulatedDistance += squaredDistances[i];
-        if (accumulatedDistance >= randomValue) {
-            index = i;
-            break;
-        }
-    }
-    return static_cast<int>(index);
+    // Use binary search to find the index corresponding to the randomValue
+    auto it = std::lower_bound(partialSums.begin(), partialSums.end(), randomValue);
+    return static_cast<int>(std::distance(partialSums.begin(), it));
 }
+
 
 std::vector<std::vector<unsigned char>> KMeansPlusPlus::getInitialCentroids() {
     std::vector<std::vector<unsigned char>> centroids;
@@ -56,24 +58,18 @@ std::vector<std::vector<unsigned char>> KMeansPlusPlus::getInitialCentroids() {
 
     for (int t = 1; t < k_; ++t) {
         std::vector<double> squaredDistances;
-        double maxDistance = -1;
         for (const auto &point: data_) {
             double distance = minDistanceToCentroid(point, centroids);
             squaredDistances.push_back(distance * distance);
-            maxDistance = std::max(maxDistance, squaredDistances.back());
-        }
-
-        for (auto &distance: squaredDistances) {
-            distance /= maxDistance;
         }
 
         int chosenIndex = getNextCentroidIndex(squaredDistances);
         centroids.push_back(data_[chosenIndex]);
     }
 
-
     return centroids;
 }
+
 
 void KMeansPlusPlus::runKMeans() {
     // Get initial centroids

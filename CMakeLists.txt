@@ -15,4 +15,6 @@ add_executable(ProjectEm main.cpp minst.cpp
         main_helper.h
         KMeansPLusPlus.cpp
         KMeansPLusPlus.h
+        HashFunction.cpp
+        HashFunction.h
 )

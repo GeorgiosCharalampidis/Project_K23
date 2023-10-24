@@ -110,7 +110,7 @@ int64_t LSH::computeID(const std::vector<unsigned char>& data_point, int table_i
     }
 
     //const int64_t M = (1LL << 32) - 5; // This simply wont work, id_value!= query_id_value always with this M
-    const int64_t M = 100000003; // Define M as a large prime
+    const int64_t M = 1000000003; // Define M as a large prime
 
     uint64_t id_value = 0;
 

@@ -32,50 +32,8 @@ int main() {
     // Create a Test_Set with the first 100 images of the dataset
     std::vector<std::vector<unsigned char>> test_set(query_set.begin(), query_set.begin() + 100);
 
-    //LSH lsh = LSH(dataset, 4, 5, 1, 10000);
-    Hypercube hypercube = Hypercube(dataset);
-    int N = hypercube.returnN(); // Get the number of nearest neighbors from the LSH object
 
-    for (int i = 0; i < 10; ++i) {
-
-        auto startCube = std::chrono::high_resolution_clock::now(); // start timer
-        std::vector<std::pair<int, double>> nearestNeighbors = hypercube.kNearestNeighbors(query_set[i]);
-        auto endCube = std::chrono::high_resolution_clock::now(); // end timer
-
-        auto startTrue = std::chrono::high_resolution_clock::now(); // start True timer
-        // True nearest neighbors for the query point
-        std::vector<std::pair<int, double>> trueNearestNeighbors = trueNNearestNeighbors(dataset, query_set[i], N);
-        auto endTrue = std::chrono::high_resolution_clock::now(); // end True timer
-
-        double tCube = std::chrono::duration<double, std::milli>(endCube - startCube).count() / 1000.0; // convert to seconds
-        double tTrue = std::chrono::duration<double, std::milli>(endTrue - startTrue).count() / 1000.0; // convert to seconds
-
-        std::cout << "\nQuery: " << i << std::endl;
-
-        for (int j = 0; j < N; ++j) {
-            std::cout << "Nearest neighbor-" << j + 1 << ": " << nearestNeighbors[j].first << std::endl;
-            std::cout << "distanceHypercube: " << nearestNeighbors[j].second << std::endl;
-            std::cout << "distanceTrue: " << trueNearestNeighbors[j].second << std::endl;
-        }
-
-        std::cout << "tHypercube: " << tCube << " seconds" << std::endl;
-        std::cout << "tTrue: " << tTrue << " seconds" << std::endl;
-
-        // Assuming the hypercube.rangeSearch function is used for R-near neighbors and it returns indices of images within the radius
-        std::vector<int> withinRange = hypercube.rangeSearch(query_set[i]);
-        std::cout << "R-near neighbors:" << std::endl;
-
-        for (const auto& neighbor : withinRange) {
-            std::cout << neighbor << std::endl;
-        }
-
-    }
-
-    // Print the hash tables
-    //lsh.printHashTables();
-
-    // Create the cluster
-    //KMeansPlusPlus plus(dataset, 5);
+    KMeansPlusPlus plus(dataset, 5);
 
     return 0;
 }

@@ -128,6 +128,30 @@ ProjectEm/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjectEm.dir\build.make CMakeFiles/ProjectEm.dir/build
 .PHONY : ProjectEm/fast
 
+HashFunction.obj: HashFunction.cpp.obj
+.PHONY : HashFunction.obj
+
+# target to build an object file
+HashFunction.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjectEm.dir\build.make CMakeFiles/ProjectEm.dir/HashFunction.cpp.obj
+.PHONY : HashFunction.cpp.obj
+
+HashFunction.i: HashFunction.cpp.i
+.PHONY : HashFunction.i
+
+# target to preprocess a source file
+HashFunction.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjectEm.dir\build.make CMakeFiles/ProjectEm.dir/HashFunction.cpp.i
+.PHONY : HashFunction.cpp.i
+
+HashFunction.s: HashFunction.cpp.s
+.PHONY : HashFunction.s
+
+# target to generate assembly for a file
+HashFunction.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\ProjectEm.dir\build.make CMakeFiles/ProjectEm.dir/HashFunction.cpp.s
+.PHONY : HashFunction.cpp.s
+
 Hypercube.obj: Hypercube.cpp.obj
 .PHONY : Hypercube.obj
 
@@ -305,6 +329,9 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... ProjectEm
+	@echo ... HashFunction.obj
+	@echo ... HashFunction.i
+	@echo ... HashFunction.s
 	@echo ... Hypercube.obj
 	@echo ... Hypercube.i
 	@echo ... Hypercube.s

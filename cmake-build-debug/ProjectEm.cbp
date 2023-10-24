@@ -82,6 +82,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="C:/Users/test/CLionProjects/Project_K23/HashFunction.cpp">
+			<Option target="ProjectEm"/>
+		</Unit>
+		<Unit filename="C:/Users/test/CLionProjects/Project_K23/HashFunction.h">
+			<Option target="ProjectEm"/>
+		</Unit>
 		<Unit filename="C:/Users/test/CLionProjects/Project_K23/Hypercube.cpp">
 			<Option target="ProjectEm"/>
 		</Unit>
