@@ -18,7 +18,7 @@ LSH::LSH(std::vector<std::vector<unsigned char>> dataset,int k, int L, int N, do
         : dataset(std::move(dataset)),
           k(k), L(L),
           N(N), R(R),
-          hash_tables(L, std::vector<std::vector<int>>(num_buckets)), // Ensure table has correct size initially
+          hash_tables(L, std::vector<std::vector<std::pair<int, int>>>(num_buckets)),
           hash_functions(L)
 {
     // Δημιουργία των hash functions για κάθε table
@@ -35,10 +35,9 @@ LSH::LSH(std::vector<std::vector<unsigned char>> dataset,int k, int L, int N, do
         ri_values[i] = dist(generator);
     }
 
-    // Generate 'w' randomly in the range [0, 6]
+    // Generate 'w' randomly in the range [1000, 1100]
 
-
-    std::uniform_real_distribution<double> w_distribution(2.0, 6.0);
+    std::uniform_real_distribution<double> w_distribution(1000, 1100);
     w = w_distribution(generator);
     buildIndex();
 }
@@ -55,33 +54,24 @@ LSH::~LSH() {
 }
 
 void LSH::buildIndex() {
-    // std::cout << "Building index with dataset size: " << dataset.size() << std::endl;
     for (auto& table : hash_tables) {
         table.resize(num_buckets);
     }
-    // std::cout << "Resized hash_tables" << std::endl;
+
+    std::cout << "Building index..." << std::endl;
 
     for (int i = 0; i < dataset.size(); ++i) {
-        // std::cout << "Processing dataset item: " << i << std::endl;
         for (int table_index = 0; table_index < L; ++table_index) {
-            // std::cout << "Hashing for table: " << table_index << std::endl;
-            int hash_value = hashDataPoint(calculateHiValues(dataset[i], table_index));
-            // std::cout << "Hashed item " << i << " for table " << table_index << std::endl;
-
-            try {
-                // std::cout << "Before inserting into hash table" << std::endl;
-                // std::cout << "hash_tables size: " << hash_tables.size() << " current table size: " << hash_tables[table_index].size() << std::endl;
-                hash_tables[table_index][hash_value].push_back(i);
-                // std::cout << "Inserted item " << i << " into hash table" << std::endl;
-            } catch (const std::exception& e) {
-                // std::cout << "Exception caught: " << e.what() << std::endl;
-            } catch (...) {
-                // std::cout << "Unknown exception caught" << std::endl;
-            }
+            int64_t id_value = computeID(dataset[i], table_index);
+            //std::cout << "id_value: " << id_value << std::endl;
+            int hash_value = id_value % num_buckets;
+            //std::cout << "hash_value: " << hash_value << std::endl;
+            hash_tables[table_index][hash_value].emplace_back(i, id_value);
         }
     }
-    // std::cout << "Finished building index" << std::endl;
+    std::cout << "Index built." << std::endl;
 }
+
 
 // Δημιουργία μιας λίστας από nf hash_functions για το LSH χρησιμοποιώντας κανονικές και ομοιόμορφες κατανομές
 std::vector<std::pair<std::vector<double>, double>> LSH::createHashFunctions(int nf, int nd) const {
@@ -106,11 +96,7 @@ std::vector<std::pair<std::vector<double>, double>> LSH::createHashFunctions(int
     return local_hash_functions;
 }
 
-
-std::vector<int> LSH::calculateHiValues(const std::vector<unsigned char>& data_point, int table_index) {
-    std::vector<int> hi_values; // Store hi values
-
-    // Initialize random number generator
+int64_t LSH::computeID(const std::vector<unsigned char>& data_point, int table_index) {
     if (table_index < 0 || table_index >= L) {
         throw std::out_of_range("Invalid table_index");
     }
@@ -123,7 +109,11 @@ std::vector<int> LSH::calculateHiValues(const std::vector<unsigned char>& data_p
         throw std::runtime_error("Invalid number of hash functions for the table.");
     }
 
-    // Calculate hi values
+    //const int64_t M = (1LL << 32) - 5; // This simply wont work, id_value!= query_id_value always with this M
+    const int64_t M = 100000003; // Define M as a large prime
+
+    uint64_t id_value = 0;
+
     for (int i = 0; i < k; ++i) {
         auto& [v, t] = table_functions[i];
         double dot_product = 0.0;
@@ -132,64 +122,44 @@ std::vector<int> LSH::calculateHiValues(const std::vector<unsigned char>& data_p
         }
         int hi = static_cast<int>(std::floor((dot_product + t) / w));
         hi += 100000; // Ensure it's positive
-        hi_values.push_back(hi);
-    }
-
-    return hi_values; // Return the vector of hi values
-}
-
-
-
-// Υπολογισμός του hash για ένα δεδομένο σημείο και το αντίστοιχο table
-int LSH::hashDataPoint(const std::vector<int>& hi_values) {
-    if (hi_values.size() != k) {
-        throw std::runtime_error("Invalid number of hi values.");
-    }
-
-    const int64_t M = (1LL << 32) - 5; // Define M as a large prime
-    uint64_t g_value = 0;
-
-    for (int i = 0; i < k; ++i) {
-        int hi = hi_values[i];
         uint64_t ri_hi_mod_M = (ri_values[i] * hi) % M;
-        g_value = (g_value + ri_hi_mod_M) % M;
+        id_value = (id_value + ri_hi_mod_M) % M;
+        //std::cout << "id_value: " << id_value << std::endl;
     }
-    g_value = g_value % num_buckets;
 
-    return g_value;
+    return id_value;
 }
 
-/*
-
-void LSH::printHashTables() const {
-    for (int tableIndex = 0; tableIndex < L; ++tableIndex) {
-        std::cout << "Table " << tableIndex << ":" << std::endl;
-
-        for (int bucketIndex = 0; bucketIndex < (num_buckets); ++bucketIndex) {
-            const std::vector<int>& bucket = hash_tables[tableIndex][bucketIndex];
-
-            std::cout << "Bucket " << bucketIndex << ": ";
-            for (int item : bucket) {
-                std::cout << item << " ";
+// Create function to print hash tables
+void LSH::printHashTables() {
+    for (int table_index = 0; table_index < L; ++table_index) {
+        std::cout << "Table " << table_index << ":" << std::endl;
+        for (int bucket_index = 0; bucket_index < num_buckets; ++bucket_index) {
+            std::cout << "Bucket " << bucket_index << ": ";
+            for (const auto& [index, id_value] : hash_tables[table_index][bucket_index]) {
+                std::cout << index << " ";
             }
             std::cout << std::endl;
         }
-
         std::cout << std::endl;
     }
 }
-*/
+
 
 std::vector<std::pair<int, double>> LSH::queryNNearestNeighbors(const std::vector<unsigned char>& query_point) {
     std::priority_queue<std::pair<double, int>> nearest_neighbors_queue;
 
     for (int table_index = 0; table_index < L; ++table_index) {
-        int hash_value = hashDataPoint(calculateHiValues(query_point, table_index));
-        const std::vector<int>& candidates = hash_tables[table_index][hash_value];
+        int64_t query_id_value = computeID(query_point, table_index); // Compute the ID for the query_point
+        int64_t hash_value = query_id_value % num_buckets;
 
-        for (int candidate_index : candidates) {
-            double distance = euclideanDistance(dataset[candidate_index], query_point);
-            nearest_neighbors_queue.emplace(distance, candidate_index);
+        for (const auto& [candidate_index, id_value] : hash_tables[table_index][hash_value]) {
+            // Only compute the distance if the ID of the data point matches the ID of the query_point
+            if (id_value == query_id_value) {
+                //std::cout << "id_value: " << id_value << std::endl;
+                double distance = euclideanDistance(dataset[candidate_index], query_point);
+                nearest_neighbors_queue.emplace(distance, candidate_index);
+            }
         }
     }
 
@@ -199,38 +169,36 @@ std::vector<std::pair<int, double>> LSH::queryNNearestNeighbors(const std::vecto
         nearest_neighbors_queue.pop();
     }
 
-    // Reverse the vector to have the closest neighbors at the beginning
     std::reverse(nearest_neighbors.begin(), nearest_neighbors.end());
+    //print the nearest neighbors
 
     return nearest_neighbors;
 }
 
-
 std::vector<int> LSH::rangeSearch(const std::vector<unsigned char>& query_point) {
-    std::set<int> candidates_within_radius; // Χρησιμοποιούμε το set για να αποφύγουμε διπλότυπα
+    std::set<int> candidates_within_radius;
 
     for (int table_index = 0; table_index < L; ++table_index) {
-        // Hash the query point for the current table
-        int hash_value = hashDataPoint(calculateHiValues(query_point, table_index));
+        int query_id_value = computeID(query_point, table_index); // Compute the ID for the query_point
+        int hash_value = query_id_value % num_buckets;
 
-        // Retrieve the candidates from the hashed bucket
-        const std::vector<int>& candidates = hash_tables[table_index][hash_value];
-
-        for (int candidate_index : candidates) {
-            double distance = euclideanDistance(dataset[candidate_index], query_point);
-
-            // Check if the distance is within the desired range
-            if (distance <= R) {
-                candidates_within_radius.insert(candidate_index);
+        for (const auto& [candidate_index, id_value] : hash_tables[table_index][hash_value]) {
+            // Only compute the distance if the ID of the data point matches the ID of the query_point
+            if (id_value == query_id_value) {
+                double distance = euclideanDistance(dataset[candidate_index], query_point);
+                if (distance <= R) {
+                    candidates_within_radius.insert(candidate_index);
+                }
             }
         }
     }
 
-    // Convert the set to a vector for the final result
     std::vector<int> result(candidates_within_radius.begin(), candidates_within_radius.end());
 
     return result;
 }
+
+
 
 int LSH::returnN() const {
     return N;

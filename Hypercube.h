@@ -8,12 +8,8 @@
 class Hypercube {
 public:
     explicit Hypercube(std::vector<std::vector<unsigned char>> dataset,
-              int k = 14,int M=10,int probes=2, int N = 1, double R = 10000);
+              int k = 14,int M=6000,int probes=10, int N = 1, double R = 10000);
     ~Hypercube();
-
-
-
-    // Builds the index for the given dataset
 
 
     std::vector<std::pair<int, double>> kNearestNeighbors(const std::vector<unsigned char>& q);
@@ -43,7 +39,8 @@ private:
     // Reduces the dimensionality of the data point using the random projection matrix
     std::vector<float> reduceDimensionality(const std::vector<unsigned char>& data_point);
 
-
+    // Computes the ID value for a data point
+    int computeID(const std::vector<unsigned char>& data_point);
 
     // Member variables
     std::vector<std::vector<unsigned char>> dataset;

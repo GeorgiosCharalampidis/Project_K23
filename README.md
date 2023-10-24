@@ -32,3 +32,5 @@ I finally got rid of the fking segmentation fault.
 Άλλωστε τα default values , έχουν περαστεί στους αντίστοιχους constructors.
 
 Συνειδητοποίησα ότι με gcc στα linux , χρειάζεται να τρέξεις ./main ./lsh , ενώ η άσκηση ζητάει , ./lsh , άρα τα ./lsh και ./cube δεν μπορούν να είναι modes , αλλά προγράμματα; Θα κάνω έρευνα..
+
+Get me 
