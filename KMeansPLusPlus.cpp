@@ -1,4 +1,4 @@
-#include "KMeansPlusPlus.h"
+#include "KMeansPLusPlus.h"
 #include "global_functions.h"
 #include <algorithm>
 #include <random>
