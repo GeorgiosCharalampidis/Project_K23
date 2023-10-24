@@ -9,7 +9,7 @@
 #include "minst.h"
 #include "lsh.h"
 #include "Hypercube.h"
-#include "KMeansPlusPlus.h"
+#include "KMeansPLusPlus.h"
 #include "global_functions.h"
 #include "main_helper.h"
 
