@@ -37,7 +37,7 @@ LSH::LSH(std::vector<std::vector<unsigned char>> dataset,int k, int L, int N, do
 
     // Generate 'w' randomly in the range [1000, 1100]
 
-    std::uniform_real_distribution<double> w_distribution(1000, 1100);
+    std::uniform_real_distribution<double> w_distribution(400, 800);
     w = w_distribution(generator);
     buildIndex();
 }
@@ -58,18 +58,15 @@ void LSH::buildIndex() {
         table.resize(num_buckets);
     }
 
-    std::cout << "Building index..." << std::endl;
-
     for (int i = 0; i < dataset.size(); ++i) {
         for (int table_index = 0; table_index < L; ++table_index) {
             int64_t id_value = computeID(dataset[i], table_index);
             //std::cout << "id_value: " << id_value << std::endl;
-            int hash_value = id_value % num_buckets;
+            int64_t hash_value = id_value % num_buckets;
             //std::cout << "hash_value: " << hash_value << std::endl;
             hash_tables[table_index][hash_value].emplace_back(i, id_value);
         }
     }
-    std::cout << "Index built." << std::endl;
 }
 
 
@@ -110,7 +107,7 @@ int64_t LSH::computeID(const std::vector<unsigned char>& data_point, int table_i
     }
 
     //const int64_t M = (1LL << 32) - 5; // This simply wont work, id_value!= query_id_value always with this M
-    const int64_t M = 1000000003; // Define M as a large prime
+    const int64_t M = 100000003; // Define M as a large prime
 
     uint64_t id_value = 0;
 

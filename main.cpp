@@ -3,19 +3,19 @@
 #include <sstream>
 #include <cstring>
 #include <vector>
-// #include "main_helper.h"
+ #include "main_helper.h"
 
+/*
 #include "KMeansPLusPlus.h"
 #include "minst.h"
 #include "lsh.h"
 #include "Hypercube.h"
 #include "global_functions.h"
-
+*/
 
 #include <chrono>
 
-
-
+/*
 
 int main() {
 
@@ -32,15 +32,61 @@ int main() {
     // Create a Test_Set with the first 100 images of the dataset
     std::vector<std::vector<unsigned char>> test_set(query_set.begin(), query_set.begin() + 100);
 
+    LSH lsh(dataset);
 
-    KMeansPlusPlus plus(dataset, 5);
+    int numberOfNearest = lsh.returnN(); // Get the number of nearest neighbors from the LSH object
+    //lsh.printHashTables();
+    // Perform the N nearest neighbor search
+
+    // ...[Omitted previous code sections for brevity]
+
+    // LSH nearest neighbors and true nearest neighbors
+    for (int i = 0; i < 10; ++i) {
+
+        auto startLSH = std::chrono::high_resolution_clock::now(); // start LSH timer
+        // LSH nearest neighbors for the query point
+        std::vector<std::pair<int, double>> nearestNeighbors = lsh.queryNNearestNeighbors(query_set[i]);
+        auto endLSH = std::chrono::high_resolution_clock::now(); // end LSH timer
+
+        auto startTrue = std::chrono::high_resolution_clock::now(); // start True timer
+        // True nearest neighbors for the query point
+        std::vector<std::pair<int, double>> trueNearestNeighbors = trueNNearestNeighbors(dataset, query_set[i], numberOfNearest);
+
+        auto endTrue = std::chrono::high_resolution_clock::now(); // end True timer
+
+        double tLSH = std::chrono::duration<double, std::milli>(endLSH - startLSH).count() / 1000.0; // convert to seconds
+        double tTrue = std::chrono::duration<double, std::milli>(endTrue - startTrue).count() / 1000.0; // convert to seconds
+
+        // Print in the combined format
+        std::cout << "\nQuery: " << i << std::endl;
+
+        for (int j = 0; j < numberOfNearest; ++j) {
+            std::cout << "Nearest neighbor-" << j + 1 << ": " << nearestNeighbors[j].first << std::endl;  // Assuming LSH and True produce the same index
+            std::cout << "distanceLSH: " << nearestNeighbors[j].second << std::endl;
+            std::cout << "distanceTrue: " << trueNearestNeighbors[j].second << std::endl;
+        }
+
+        std::cout << "tLSH: " << tLSH << " seconds" << std::endl;
+        std::cout << "tTrue: " << tTrue << " seconds" << std::endl;
+
+        // Assuming the lsh.rangeSearch function is used for R-near neighbors and it returns indices of images within the radius
+        std::vector<int> withinRange = lsh.rangeSearch(query_set[i]);
+        std::cout << "R-near neighbors:" << std::endl;
+        for (int neighbor : withinRange) {
+            std::cout << neighbor << std::endl;
+        }
+    }
+
+
+
+    //KMeansPlusPlus plus(dataset, 5);
 
     return 0;
 }
 
+    */
 
 
-/*
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
@@ -95,4 +141,3 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
-*/
