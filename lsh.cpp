@@ -21,6 +21,7 @@ LSH::LSH(std::vector<std::vector<unsigned char>> dataset,int k, int L, int N, do
           hash_tables(L, std::vector<std::vector<std::pair<int, int>>>(num_buckets)),
           hash_functions(L)
 {
+
     // Δημιουργία των hash functions για κάθε table
     for(int i = 0; i < L; ++i) {
         hash_functions[i] = createHashFunctions(k, num_dimensions);
@@ -172,18 +173,27 @@ std::vector<std::pair<int, double>> LSH::queryNNearestNeighbors(const std::vecto
     return nearest_neighbors;
 }
 
+// Overload 1: Doesn't take radius, uses the class's private member R
 std::vector<int> LSH::rangeSearch(const std::vector<unsigned char>& query_point) {
+    return rangeSearch(query_point, R); // Call the second overload using the class's private member R
+}
+
+// Overload 2: Takes a radius and uses that
+std::vector<int> LSH::rangeSearch(const std::vector<unsigned char>& query_point, double radius) {
     std::set<int> candidates_within_radius;
 
+    //std::cout << "radius: " << radius << std::endl;
+
+
     for (int table_index = 0; table_index < L; ++table_index) {
-        int query_id_value = computeID(query_point, table_index); // Compute the ID for the query_point
+        int query_id_value = computeID(query_point, table_index);
         int hash_value = query_id_value % num_buckets;
 
         for (const auto& [candidate_index, id_value] : hash_tables[table_index][hash_value]) {
-            // Only compute the distance if the ID of the data point matches the ID of the query_point
             if (id_value == query_id_value) {
                 double distance = euclideanDistance(dataset[candidate_index], query_point);
-                if (distance <= R) {
+
+                if (distance <= radius) {  // Use the passed radius
                     candidates_within_radius.insert(candidate_index);
                 }
             }
@@ -191,12 +201,14 @@ std::vector<int> LSH::rangeSearch(const std::vector<unsigned char>& query_point)
     }
 
     std::vector<int> result(candidates_within_radius.begin(), candidates_within_radius.end());
-
     return result;
 }
 
 
-
 int LSH::returnN() const {
     return N;
+}
+
+double LSH::returnR() const {
+    return R;
 }

@@ -57,6 +57,7 @@ void handleLSHMode(const std::vector<std::string>& args, int argc) {
     LSH lsh = (argc == 2) ? LSH(dataset) : LSH(dataset, k, L, numberOfNearest, radius);
 
     numberOfNearest = lsh.returnN(); // Get the number of nearest neighbors from the LSH object
+
     //lsh.printHashTables();
     // Perform the N nearest neighbor search
 
@@ -146,7 +147,6 @@ void handleCubeMode(const std::vector<std::string>& args, int argc) {
     Hypercube hypercube = (argc == 2) ? Hypercube(dataset) : Hypercube(dataset,k, M, probes, N, radius);
 
     N = hypercube.returnN(); // Get the number of nearest neighbors from the Hypercube object
-
     std::ofstream outputFileStream("output.dat");
     if (!outputFileStream.is_open() || outputFileStream.fail()) {
         std::cerr << "Failed to open output.dat for writing." << std::endl;

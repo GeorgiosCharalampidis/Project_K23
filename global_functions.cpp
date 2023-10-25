@@ -11,6 +11,9 @@
 // Functions that will be used throughout the project
 //
 
+
+
+
 // Υπολογισμός της ευκλείδιας απόστασης μεταξύ δύο διανυσμάτων
 double euclideanDistance(const std::vector<unsigned char>& dataset, const std::vector<unsigned char>& query_set) {
     if (dataset.size() != query_set.size()) {
@@ -74,4 +77,14 @@ std::vector<std::pair<int, double>> trueNNearestNeighbors(const std::vector<std:
     return nearest_neighbors;
 }
 
+std::vector<unsigned char> convertToUnsignedChar(const std::vector<double>& vec) {
+    std::vector<unsigned char> result;
+    result.reserve(vec.size());
+
+    for(const auto& val : vec) {
+        result.push_back(static_cast<unsigned char>(std::round(val)));
+    }
+
+    return result;
+}
 

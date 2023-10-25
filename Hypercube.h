@@ -8,14 +8,16 @@
 class Hypercube {
 public:
     explicit Hypercube(std::vector<std::vector<unsigned char>> dataset,
-              int k = 14,int M=6000,int probes=10, int N = 1, double R = 10000);
+              int k = 13,int M=6000,int probes=10, int N = 1, double R = 10000);
     ~Hypercube();
 
 
     std::vector<std::pair<int, double>> kNearestNeighbors(const std::vector<unsigned char>& q);
     std::vector<int> rangeSearch(const std::vector<unsigned char>& q);
+    std::vector<int> rangeSearch(const std::vector<unsigned char>& q, double radius);
 
     [[nodiscard]] int returnN() const;
+    [[nodiscard]] double returnR() const;
 
 private:
     void buildIndex();
@@ -54,7 +56,7 @@ private:
     int n=60000;
     int probes;
     std::vector<std::vector<float>> random_projection_matrix;
-    std::vector<int> hash_table;
+    std::vector<std::vector<int>> hash_table;
     std::vector<std::pair<std::vector<float>, float>> table_functions;
     std::mt19937 generator;
 };

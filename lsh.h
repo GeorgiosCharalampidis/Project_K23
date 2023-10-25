@@ -12,14 +12,18 @@ public:
     // Function to create hash functions
     [[nodiscard]] std::vector<std::pair<std::vector<double>, double>> createHashFunctions(int nf, int nd) const;
 
-    // Function to execute a range search for a given query point
+    // Overload 1: Doesn't take radius, uses the class's private member R
     std::vector<int> rangeSearch(const std::vector<unsigned char>& query_point);
+
+    // Overload 2: Takes a radius and uses that
+    std::vector<int> rangeSearch(const std::vector<unsigned char>& query_point, double radius);
 
     // Function to query N nearest neighbors for a given query point
     std::vector<std::pair<int, double>> queryNNearestNeighbors(const std::vector<unsigned char>& query_point);
 
     // Getter for N
     [[nodiscard]] int returnN() const;
+    [[nodiscard]] double returnR() const;
 
     // Function to print the hash tables
     void printHashTables();
@@ -27,7 +31,7 @@ public:
 private:
     int k; // Number of hash functions
     int L; // Number of hash tables
-    int num_buckets = 15000; // Number of buckets
+    int num_buckets = 10000; // Number of buckets
     int N; // Number of nearest neighbors
     double w; // Bucket width
     double R; // Radius

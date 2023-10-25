@@ -14,11 +14,12 @@ Hypercube::Hypercube(std::vector<std::vector<unsigned char>> dataset,
           k(k),
           M(M),probes(probes),
           N(N), R(R),
-          hash_table(1 << k, -1), // 2^k buckets
           table_functions(createHashFunctions(k, computeDPrime(n)))
 {
     generator = std::mt19937(std::random_device{}());
     reduced_dimension = computeDPrime(n);
+    // Resize the hash_table for 2^k buckets, each initialized with an empty vector
+    hash_table.resize(1 << k);
 
     // Create the random projection matrix
     std::normal_distribution<float> distribution(0.0, 1.0);
@@ -44,10 +45,42 @@ Hypercube::~Hypercube() {
 void Hypercube::buildIndex() {
     for (int i = 0; i < dataset.size(); ++i) {
         int id = computeID(dataset[i]);
-        hash_table[id] = i;
+        hash_table[id].push_back(i);
     }
 }
 
+std::vector<int> Hypercube::probe(const std::vector<unsigned char>& query_point, int maxProbes) {
+    int hash_value = computeID(query_point);
+    std::set<int> candidates;
+    int vertices_checked = 0;
+    int distance = 0;
+
+    //std::cout << "maxProbes: " << maxProbes << std::endl;
+    //std::cout << "vertices_checked: " << vertices_checked << std::endl;
+
+
+
+    while(vertices_checked < maxProbes) {
+        for (int i = 0; i < k && vertices_checked < maxProbes; ++i) {
+            int neighbor_hash = hash_value ^ (1 << i);
+            //std::cout << "Hello" << std::endl;
+            // print hash_table[neighbor_hash]
+            //std::cout << "hash_table[neighbor_hash].size(): " << hash_table[neighbor_hash].size() << std::endl;
+            for(int idx : hash_table[neighbor_hash]) {
+                //std::cout << "idx: " << idx << std::endl;
+                candidates.insert(idx);
+            }
+            vertices_checked++;
+        }
+        distance++; // This increases the Hamming distance, but remember, you might want to constrain this if it goes beyond the bounds of your hypercube.
+    }
+
+    return {candidates.begin(), candidates.end()};
+}
+
+
+
+/*
 std::vector<int> Hypercube::probe(const std::vector<unsigned char>& query_point, int maxHammingDistance) {
     int hash_value = computeID(query_point);
     std::set<int> candidates;
@@ -56,8 +89,8 @@ std::vector<int> Hypercube::probe(const std::vector<unsigned char>& query_point,
     for (int distance = 0; distance <= maxHammingDistance && vertices_checked < probes; ++distance) {
         for (int i = 0; i < k; ++i) {
             int neighbor_hash = hash_value ^ (1 << i);
-            if (hash_table[neighbor_hash] != -1) {
-                candidates.insert(hash_table[neighbor_hash]);
+            for(int idx : hash_table[neighbor_hash]) {
+                candidates.insert(idx);
             }
             vertices_checked++;
         }
@@ -65,6 +98,7 @@ std::vector<int> Hypercube::probe(const std::vector<unsigned char>& query_point,
 
     return {candidates.begin(), candidates.end()};
 }
+ */
 
 int Hypercube::fi(int hi_value) {
     return hi_value % 2;
@@ -113,7 +147,7 @@ std::vector<std::pair<std::vector<float>, float>> Hypercube::createHashFunctions
 
 std::vector<std::pair<int, double>> Hypercube::kNearestNeighbors(const std::vector<unsigned char>& q) {
     std::priority_queue<std::pair<double, int>, std::vector<std::pair<double, int>>, std::greater<>> nearest_neighbors_queue;
-    std::vector<int> candidateIndices = probe(q, k);
+    std::vector<int> candidateIndices = probe(q, probes); // IT WAS k not probes
 
 
     int checkedCandidates = 0;
@@ -139,28 +173,43 @@ std::vector<std::pair<int, double>> Hypercube::kNearestNeighbors(const std::vect
 }
 
 
-
+// Overload 1: Doesn't take a radius, uses the class's private member R
 std::vector<int> Hypercube::rangeSearch(const std::vector<unsigned char>& q) {
-    std::vector<int> candidateIndices = probe(q, k);
+    return rangeSearch(q, R);
+}
+
+// Overload 2: Takes a radius and uses that
+std::vector<int> Hypercube::rangeSearch(const std::vector<unsigned char>& q, double radius) {
+
+    std::vector<int> candidateIndices = probe(q, probes); // IT WAS k not probes
+
+
+
+    // print candiateIndices
+    //std::cout << candidateIndices.size() << std::endl;
+
     std::set<int> inRangeIndices; // Use a set to avoid duplicates
     int checkedCandidates = 0;
+    //std::cout << "candidateIndices.size(): " << candidateIndices.size() << std::endl;
+
 
     for (const auto& index : candidateIndices) {
         if (checkedCandidates >= M) {
             break;
         }
         double distance = euclideanDistance(dataset[index], q);
-        if (distance <= R) {
+        if (distance <= radius) { // Use the provided radius
             inRangeIndices.insert(index);
+
         }
         checkedCandidates++;
     }
 
     // Convert the set to a vector for the final result
     std::vector<int> result(inRangeIndices.begin(), inRangeIndices.end());
-
     return result;
 }
+
 
 std::vector<float> Hypercube::reduceDimensionality(const std::vector<unsigned char>& data_point) {
     std::vector<float> reduced_point(reduced_dimension, 0.0);
@@ -174,4 +223,8 @@ std::vector<float> Hypercube::reduceDimensionality(const std::vector<unsigned ch
 
 int Hypercube::returnN() const {
     return N;
+}
+
+double Hypercube::returnR() const {
+    return R;
 }
