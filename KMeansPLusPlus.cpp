@@ -216,7 +216,6 @@ std::vector<unsigned char> KMeansPlusPlus::computeMean(const std::vector<std::ve
 
 void KMeansPlusPlus::reverseSearch(const std::string& method) {
     bool converged = false;
-    const int Max_Doublings = 10;
 
     while (!converged) {
         clusters_.clear();

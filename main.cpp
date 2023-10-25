@@ -37,9 +37,9 @@ int main() {
     //Hypercube cube(dataset);
 
 
-    //KMeansPlusPlus plus(test_set, 10, "Lloyds");
-    KMeansPlusPlus plus(dataset_small, 10, "HyperCube");
-    // KMeansPlusPlus plus(dataset_small, 10, "LSH");
+    //KMeansPlusPlus plus(dataset, 10, "Lloyds"); // Takes around 3 minutes to run
+    //KMeansPlusPlus plus(dataset, 10, "HyperCube"); // Takes around 8 minutes to run
+    KMeansPlusPlus plus(dataset, 10, "LSH"); // Takes around 8 and a half minutes to run
     plus.printClusterIndices();
 
 

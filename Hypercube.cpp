@@ -79,27 +79,6 @@ std::vector<int> Hypercube::probe(const std::vector<unsigned char>& query_point,
 }
 
 
-
-/*
-std::vector<int> Hypercube::probe(const std::vector<unsigned char>& query_point, int maxHammingDistance) {
-    int hash_value = computeID(query_point);
-    std::set<int> candidates;
-    int vertices_checked = 0;
-
-    for (int distance = 0; distance <= maxHammingDistance && vertices_checked < probes; ++distance) {
-        for (int i = 0; i < k; ++i) {
-            int neighbor_hash = hash_value ^ (1 << i);
-            for(int idx : hash_table[neighbor_hash]) {
-                candidates.insert(idx);
-            }
-            vertices_checked++;
-        }
-    }
-
-    return {candidates.begin(), candidates.end()};
-}
- */
-
 int Hypercube::fi(int hi_value) {
     return hi_value % 2;
 }
