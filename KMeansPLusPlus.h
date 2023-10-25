@@ -8,7 +8,7 @@
 
 #include <vector>
 #include <random>
-#include "lsh.h"
+#include "lsh_class.h"
 #include "Hypercube.h"
 
 

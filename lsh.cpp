@@ -1,214 +1,110 @@
+///////////////////////////////////////////////////////
+//                  Start of ./lsh                   //
+///////////////////////////////////////////////////////
+
 #include <iostream>
-#include <stdexcept>
-#include <utility>
+#include <string>
+#include <sstream>
+#include <cstring>
 #include <vector>
-#include <random>
-#include <cmath>
-#include <limits>
-#include <set>
-#include <algorithm>
-
-#include <queue>
-#include "lsh.h"
+#include "main_helper.h"
+#include "KMeansPLusPlus.h"
+#include "mnist.h"
+#include "lsh_class.h"
+#include "Hypercube.h"
 #include "global_functions.h"
+#include <chrono>
+//#include <cstdlib>  // ~For system() maybe we will use it, maybe we will not
 
-
-// LSH Constructor
-LSH::LSH(std::vector<std::vector<unsigned char>> dataset,int k, int L, int N, double R)
-        : dataset(std::move(dataset)),
-          k(k), L(L),
-          N(N), R(R),
-          hash_tables(L, std::vector<std::vector<std::pair<int, int>>>(num_buckets)),
-          hash_functions(L)
+int main(int argc, char* argv[]) 
 {
 
-    // Δημιουργία των hash functions για κάθε table
-    for(int i = 0; i < L; ++i) {
-        hash_functions[i] = createHashFunctions(k, num_dimensions);
-    }
+    int number_of_images, image_size;
 
-    // Δημιουργία τυχαίων τιμών 'ri' για τα hash functions
-    ri_values.resize(k);
-    std::random_device rd;
-    std::default_random_engine generator(rd());
-    std::uniform_int_distribution<int> dist(0, std::numeric_limits<int>::max()); // Range for int
-    for (int i = 0; i < k; ++i) {
-        ri_values[i] = dist(generator);
-    }
+    // Create vector to store dataset
+    std::string input = R"(C:\Users\test\CLionProjects\Project_K23\input.dat)";
+    std::string query = R"(C:\Users\test\CLionProjects\Project_K23\query.dat)";
+    std::string outputPath = R"(C:\Users\test\CLionProjects\Project_K23\output.dat)";
 
-    // Generate 'w' randomly in the range [1000, 1100]
+    std::vector<std::vector<unsigned char>> dataset = read_mnist_images(input, number_of_images, image_size);
+    std::vector<std::vector<unsigned char>> query_set = read_mnist_images(query, number_of_images,image_size);
 
-    std::uniform_real_distribution<double> w_distribution(400, 800);
-    w = w_distribution(generator);
-    buildIndex();
-}
+    // Create a Test_Set with the first 100 images of the dataset
+    std::vector<std::vector<unsigned char>> test_set(dataset.begin(), dataset.begin() + 10000);
+    std::vector<std::vector<unsigned char>> dataset_small(dataset.begin(), dataset.begin() + 10000);
 
-// LSH Destructor
-LSH::~LSH() {
-    for (auto& table_functions : hash_functions) {
-        for (auto& hash_function : table_functions) {
-            hash_function.first.clear(); // Clear the vector within each pair
+    std::string mode = argv[1];
+    char decision;
+
+    do {
+        if (mode == "./lsh") {
+            handleLSHMode(std::vector<std::string>(argv, argv + argc), argc);
+        } else if (mode == "./cube") {
+            handleCubeMode(std::vector<std::string>(argv, argv + argc), argc);
+        } else {
+            std::cerr << "Invalid mode: " << mode << std::endl;
+            return 1;
         }
-        table_functions.clear(); // Clear the table's vector of hash functions
-    }
-    hash_functions.clear(); // Clear the vector of hash function tables
-}
 
-void LSH::buildIndex() {
-    for (auto& table : hash_tables) {
-        table.resize(num_buckets);
-    }
+        // After producing results, ask the user if they want to continue or terminate
+        std::cout << "\nRepeat the search for a different set/query file? (Type Y/N): ";
+        std::cin >> decision;
+        std::cin.ignore(); // Clear newline left in buffer
 
-    for (int i = 0; i < dataset.size(); ++i) {
-        for (int table_index = 0; table_index < L; ++table_index) {
-            int64_t id_value = computeID(dataset[i], table_index);
-            //std::cout << "id_value: " << id_value << std::endl;
-            int64_t hash_value = id_value % num_buckets;
-            //std::cout << "hash_value: " << hash_value << std::endl;
-            hash_tables[table_index][hash_value].emplace_back(i, id_value);
-        }
-    }
-}
+        // If user decides to continue, prompt for new mode and arguments
+        if (decision == 'Y' || decision == 'y') {
+            std::cout << "Enter the program mode (./lsh or ./cube): ";
+            std::getline(std::cin, mode);
 
+            // Clear previous arguments and keep only the program name (argv[0])
+            argv[1] = &mode[0];
+            argc = 2;
 
-// Δημιουργία μιας λίστας από nf hash_functions για το LSH χρησιμοποιώντας κανονικές και ομοιόμορφες κατανομές
-std::vector<std::pair<std::vector<double>, double>> LSH::createHashFunctions(int nf, int nd) const {
-    // Αρχικοποίηση random number generator
-    std::random_device rd;
-    std::default_random_engine generator(rd());
-    std::normal_distribution<double> distribution(0.0, 1.0);
-    std::uniform_real_distribution<double> uniform_dist(0, w);
-
-    std::vector<std::pair<std::vector<double>, double>> local_hash_functions;
-    local_hash_functions.reserve(nf);
-    // Δημιουργήσαμε nf hash_functions που παράγουν και αποθηκεύουν v μεγέθους nd και t στο [0, w)
-    for (int i = 0; i < nf; ++i) {
-        std::vector<double> v(nd);
-        for (int j = 0; j < nd; ++j) {
-            v[j] = distribution(generator);
-        }
-        double t = uniform_dist(generator);
-        local_hash_functions.emplace_back(v, t);
-    }
-
-    return local_hash_functions;
-}
-
-int64_t LSH::computeID(const std::vector<unsigned char>& data_point, int table_index) {
-    if (table_index < 0 || table_index >= L) {
-        throw std::out_of_range("Invalid table_index");
-    }
-    if (data_point.size() != num_dimensions) {
-        throw std::invalid_argument("Invalid data_point dimensions");
-    }
-
-    auto& table_functions = hash_functions[table_index];
-    if (table_functions.size() != k) {
-        throw std::runtime_error("Invalid number of hash functions for the table.");
-    }
-
-    //const int64_t M = (1LL << 32) - 5; // This simply wont work, id_value!= query_id_value always with this M
-    const int64_t M = 100000003; // Define M as a large prime
-
-    uint64_t id_value = 0;
-
-    for (int i = 0; i < k; ++i) {
-        auto& [v, t] = table_functions[i];
-        double dot_product = 0.0;
-        for (int j = 0; j < num_dimensions; ++j) {
-            dot_product += v[j] * data_point[j];
-        }
-        int hi = static_cast<int>(std::floor((dot_product + t) / w));
-        hi += 100000; // Ensure it's positive
-        uint64_t ri_hi_mod_M = (ri_values[i] * hi) % M;
-        id_value = (id_value + ri_hi_mod_M) % M;
-        //std::cout << "id_value: " << id_value << std::endl;
-    }
-
-    return id_value;
-}
-
-// Create function to print hash tables
-void LSH::printHashTables() {
-    for (int table_index = 0; table_index < L; ++table_index) {
-        std::cout << "Table " << table_index << ":" << std::endl;
-        for (int bucket_index = 0; bucket_index < num_buckets; ++bucket_index) {
-            std::cout << "Bucket " << bucket_index << ": ";
-            for (const auto& [index, id_value] : hash_tables[table_index][bucket_index]) {
-                std::cout << index << " ";
-            }
-            std::cout << std::endl;
-        }
-        std::cout << std::endl;
-    }
-}
-
-
-std::vector<std::pair<int, double>> LSH::queryNNearestNeighbors(const std::vector<unsigned char>& query_point) {
-    std::priority_queue<std::pair<double, int>> nearest_neighbors_queue;
-
-    for (int table_index = 0; table_index < L; ++table_index) {
-        int64_t query_id_value = computeID(query_point, table_index); // Compute the ID for the query_point
-        int64_t hash_value = query_id_value % num_buckets;
-
-        for (const auto& [candidate_index, id_value] : hash_tables[table_index][hash_value]) {
-            // Only compute the distance if the ID of the data point matches the ID of the query_point
-            if (id_value == query_id_value) {
-                //std::cout << "id_value: " << id_value << std::endl;
-                double distance = euclideanDistance(dataset[candidate_index], query_point);
-                nearest_neighbors_queue.emplace(distance, candidate_index);
-            }
-        }
-    }
-
-    std::vector<std::pair<int, double>> nearest_neighbors;
-    while (!nearest_neighbors_queue.empty() && nearest_neighbors.size() < N) {
-        nearest_neighbors.emplace_back(nearest_neighbors_queue.top().second, nearest_neighbors_queue.top().first);
-        nearest_neighbors_queue.pop();
-    }
-
-    std::reverse(nearest_neighbors.begin(), nearest_neighbors.end());
-    //print the nearest neighbors
-
-    return nearest_neighbors;
-}
-
-// Overload 1: Doesn't take radius, uses the class's private member R
-std::vector<int> LSH::rangeSearch(const std::vector<unsigned char>& query_point) {
-    return rangeSearch(query_point, R); // Call the second overload using the class's private member R
-}
-
-// Overload 2: Takes a radius and uses that
-std::vector<int> LSH::rangeSearch(const std::vector<unsigned char>& query_point, double radius) {
-    std::set<int> candidates_within_radius;
-
-    //std::cout << "radius: " << radius << std::endl;
-
-
-    for (int table_index = 0; table_index < L; ++table_index) {
-        int query_id_value = computeID(query_point, table_index);
-        int hash_value = query_id_value % num_buckets;
-
-        for (const auto& [candidate_index, id_value] : hash_tables[table_index][hash_value]) {
-            if (id_value == query_id_value) {
-                double distance = euclideanDistance(dataset[candidate_index], query_point);
-
-                if (distance <= radius) {  // Use the passed radius
-                    candidates_within_radius.insert(candidate_index);
+            if (mode == "./lsh" || mode == "./cube") {
+                std::cout << "Enter any additional arguments (or press enter to skip): ";
+                std::string args;
+                std::getline(std::cin, args);
+                std::istringstream iss(args);
+                std::string arg;
+                while (iss >> arg && argc < 20) {
+                    argv[argc] = new char[arg.length() + 1];  // +1 for the null-terminator
+                    std::strcpy(argv[argc], arg.c_str());
+                    argc++;
                 }
+            } else {
+                std::cerr << "Invalid mode: " << mode << std::endl;
+                return 1;
             }
         }
+
+    } while (decision == 'Y' || decision == 'y');
+
+    /* 
+    const char* command ; 
+    std::cin >> command; //"command_to_run_another_executable arg1 arg2 arg3"; something like that as input
+    int result;
+    if(command = "./cube")
+    {
+        result = system(command); //runs ./cube
     }
+    else if (command = "./lsh")
+    {
+        continue;
+    }
+    else break; //Goodbye
 
-    std::vector<int> result(candidates_within_radius.begin(), candidates_within_radius.end());
-    return result;
-}
+    if (result == 0) 
+    {
+        // The program executed successfully.
+    } else {
+        // There was an error executing the program.
+    }
+    
+    //~this is a way to call another exec in this main, maybe we will use it, maybe we will noy
+    */
+   
 
 
-int LSH::returnN() const {
-    return N;
-}
-
-double LSH::returnR() const {
-    return R;
+    return 0;
+   
 }

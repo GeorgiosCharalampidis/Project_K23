@@ -6,8 +6,8 @@
 #include <string>
 #include <vector>
 #include <chrono>
-#include "minst.h"
-#include "lsh.h"
+#include "mnist.h"
+#include "lsh_class.h"
 #include "Hypercube.h"
 #include "KMeansPLusPlus.h"
 #include "global_functions.h"

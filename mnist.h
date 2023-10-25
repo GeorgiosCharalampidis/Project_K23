@@ -1,5 +1,5 @@
-#ifndef MINST_H
-#define MINST_H
+#ifndef MNIST_H
+#define MNIST_H
 
 #include <vector>
 #include <string>
