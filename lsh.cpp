@@ -12,8 +12,6 @@
 #include "lsh_class.h"
 #include "global_functions.h"
 
-
-
 int main(int argc, char** argv) {
 
     char repeatChoice = 'n'; // to control the loop
@@ -65,6 +63,13 @@ int main(int argc, char** argv) {
 
             numberOfNearest = lsh.returnN(); // Get the number of nearest neighbors from the LSH object
 
+            std::ofstream outputFileStream("output.dat");
+            if (!outputFileStream.is_open() || outputFileStream.fail()) {
+                std::cerr << "Failed to open output.dat for writing." << std::endl;
+                return 2;
+            }
+
+
             for (int i = 0; i < 10; ++i) {
 
                 auto startLSH = std::chrono::high_resolution_clock::now(); // start LSH timer
@@ -82,24 +87,28 @@ int main(int argc, char** argv) {
                 double tTrue = std::chrono::duration<double, std::milli>(endTrue - startTrue).count() / 1000.0; // convert to seconds
 
                 // Print in the combined format
-                std::cout << "\nQuery: " << i << std::endl;
+                outputFileStream << "\nQuery: " << i << std::endl;
 
                 for (int j = 0; j < numberOfNearest; ++j) {
-                    std::cout << "Nearest neighbor-" << j + 1 << ": " << nearestNeighbors[j].first << std::endl;  // Assuming LSH and True produce the same index
-                    std::cout << "distanceLSH: " << nearestNeighbors[j].second << std::endl;
-                    std::cout << "distanceTrue: " << trueNearestNeighbors[j].second << std::endl;
+                    outputFileStream << "Nearest neighbor-" << j + 1 << ": " << nearestNeighbors[j].first << std::endl;  // Assuming LSH and True produce the same index
+                    outputFileStream << "distanceLSH: " << nearestNeighbors[j].second << std::endl;
+                    outputFileStream << "distanceTrue: " << trueNearestNeighbors[j].second << std::endl;
                 }
 
-                std::cout << "tLSH: " << tLSH << " seconds" << std::endl;
-                std::cout << "tTrue: " << tTrue << " seconds" << std::endl;
+                outputFileStream << "tLSH: " << tLSH << " seconds" << std::endl;
+                outputFileStream << "tTrue: " << tTrue << " seconds" << std::endl;
 
                 // Assuming the lsh.rangeSearch function is used for R-near neighbors and it returns indices of images within the radius
                 std::vector<int> withinRange = lsh.rangeSearch(query_set[i]);
-                std::cout << "R-near neighbors:" << std::endl;
+                outputFileStream << "R-near neighbors:" << std::endl;
                 for (int neighbor : withinRange) {
-                    std::cout << neighbor << std::endl;
+                    outputFileStream << neighbor << std::endl;
                 }
             }
+
+        outputFileStream.flush();  // Ensure all data is written
+        outputFileStream.close();  // Close the file
+
 
         // Ask the user if they want to repeat with new files
         std::cout << "Do you want to repeat with new input.dat and query.dat? (y/n): ";

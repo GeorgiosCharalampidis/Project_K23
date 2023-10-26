@@ -64,6 +64,7 @@ int main123(int argc, char** argv) {
         Hypercube hypercube = (argc == 2) ? Hypercube(dataset) : Hypercube(dataset,k, M, probes, N, radius);
 
         N = hypercube.returnN(); // Get the number of nearest neighbors from the Hypercube object
+
         std::ofstream outputFileStream("output.dat");
         if (!outputFileStream.is_open() || outputFileStream.fail()) {
             std::cerr << "Failed to open output.dat for writing." << std::endl;
