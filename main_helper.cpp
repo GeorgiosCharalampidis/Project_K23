@@ -64,6 +64,7 @@ void handleLSHMode(const std::vector<std::string>& args, int argc) {
     // ...[Omitted previous code sections for brevity]
 
     // LSH nearest neighbors and true nearest neighbors
+    // Loop through the first 10 query points
     for (int i = 0; i < 10; ++i) {
 
         auto startLSH = std::chrono::high_resolution_clock::now(); // start LSH timer
@@ -155,6 +156,8 @@ void handleCubeMode(const std::vector<std::string>& args, int argc) {
 
 
     // Print k nearest neighbors
+    // Loop through the first 10 query points
+
     for (int i = 0; i < 10; ++i) {
 
         auto startCube = std::chrono::high_resolution_clock::now(); // start timer
@@ -194,49 +197,6 @@ void handleCubeMode(const std::vector<std::string>& args, int argc) {
     outputFileStream.close();  // Close the file
 }
 
-void handleClusterMode () {
-    std::string inputFile,outputFile;
-    int k, L, number_of_images, image_size;
-
-    std::cout << "Enter the path to the dataset: ";
-    std::cin >> inputFile;
-
-    std::cout << "Enter the path for output file: ";
-    std::cin >> outputFile;
-
-    std::vector<std::vector<unsigned char>> dataset = read_mnist_images(inputFile, number_of_images, image_size);
-
-    std::cout << "Enter the number of clusters: ";
-    std::cin >> k;
-
-    std::cout << "Enter the number of hash tables: ";
-    std::cin >> L;
-
-    std::ofstream outputFileStream(outputFile);
-    if (!outputFileStream.is_open() || outputFileStream.fail()) {
-        std::cerr << "Failed to open output.dat for writing." << std::endl;
-        return;
-    }
-
-    // Perform the clustering
-    KMeansPlusPlus kMeansPlusPlus(dataset, k);
-
-    /*
-
-    // Print the kMeansPlusPlus
-    for (int i = 0; i < k; ++i) {
-        std::cout << "CLUSTER-" << i << " {size: " << kMeansPlusPlus.getClusterSize(i) << ", centroid: [";
-        for (int j = 0; j < image_size; ++j) {
-            std::cout << kMeansPlusPlus.getClusterCentroid(i)[j];
-            if (j != image_size - 1) {
-                std::cout << ", ";
-            }
-        }
-        std::cout << "]}" << std::endl;
-    }
-    */
-
-}
 
 
 

@@ -80,19 +80,19 @@ int main(int argc, char* argv[]) {
 
     std::vector<std::vector<unsigned char>> dataset = read_mnist_images(input, number_of_images, image_size);
 
-    std::vector<std::vector<unsigned char>> test_set(dataset.begin(), dataset.begin() + 1000);
+    std::vector<std::vector<unsigned char>> test_set(dataset.begin(), dataset.begin() + 10000);
 
     // Depending on the method:
     if (method == "Classic") {
-        KMeansPlusPlus plus(test_set, 10, "Lloyds", number_of_vector_hash_functions, number_of_vector_hash_tables,
+        KMeansPlusPlus plus(test_set, number_of_clusters, "Lloyds", number_of_vector_hash_functions, number_of_vector_hash_tables,
                             number_of_hypercube_dimensions, max_number_M_hypercube, number_of_probes, complete);
 
     } else if (method == "LSH") {
 
-        KMeansPlusPlus plus(test_set, 10, "LSH", number_of_vector_hash_functions, number_of_vector_hash_tables,
+        KMeansPlusPlus plus(test_set, number_of_clusters, "LSH", number_of_vector_hash_functions, number_of_vector_hash_tables,
                             number_of_hypercube_dimensions, max_number_M_hypercube, number_of_probes, complete);
     } else if (method == "HyperCube") {
-        KMeansPlusPlus plus(test_set, 10, "HyperCube", number_of_vector_hash_functions, number_of_vector_hash_tables,
+        KMeansPlusPlus plus(test_set, number_of_clusters, "HyperCube", number_of_vector_hash_functions, number_of_vector_hash_tables,
                             number_of_hypercube_dimensions, max_number_M_hypercube, number_of_probes, complete);    }
     else {
         std::cerr << "Invalid method specified." << std::endl;
