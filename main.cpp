@@ -30,7 +30,7 @@ int main() {
     std::vector<std::vector<unsigned char>> query_set = read_mnist_images(query, number_of_images,image_size);
 
     // Create a Test_Set with the first 100 images of the dataset
-    std::vector<std::vector<unsigned char>> test_set(dataset.begin(), dataset.begin() + 10000);
+    std::vector<std::vector<unsigned char>> test_set(dataset.begin(), dataset.begin() + 1000);
     std::vector<std::vector<unsigned char>> dataset_small(dataset.begin(), dataset.begin() + 10000);
 
     //LSH lsh(dataset);
@@ -39,7 +39,7 @@ int main() {
 
     //KMeansPlusPlus plus(dataset, 10, "Lloyds"); // Takes around 3 minutes to run
     //KMeansPlusPlus plus(dataset, 10, "HyperCube"); // Takes around 8 minutes to run
-    KMeansPlusPlus plus(dataset, 10, "LSH"); // Takes around 8 and a half minutes to run
+    KMeansPlusPlus plus(test_set, 10, "LSH"); // Takes around 8 and a half minutes to run
     plus.printClusterIndices();
 
 
