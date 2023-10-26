@@ -7,6 +7,9 @@
 #include <stdexcept>
 #include <vector>
 
+#include "mnist.h"
+
+
 // Συνάρτηση που αντιστρέφει τη σειρά των bytes σε έναν ακέραιο (για τη μορφή του αρχείου MNIST)
 auto reverseInt = [](int i) {
     unsigned char c1, c2, c3, c4;
@@ -18,10 +21,14 @@ auto reverseInt = [](int i) {
 };
 
 // Συνάρτηση που διαβάζει τα δεδομένα των εικόνων MNIST από ένα αρχείο
-std::vector<std::vector<unsigned char>> read_mnist_images(std::string full_path, int& number_of_images, int& image_size) {
+std::vector<std::vector<unsigned char>> read_mnist_images(const std::string& full_path, int& number_of_images, int& image_size) {
+
+    // std::cout << "Reading MNIST images from `" << full_path << "`..." << std::endl;
+
     std::ifstream file(full_path, std::ios::binary);
 
     if (file.is_open()) {
+
         int magic_number = 0, n_rows = 0, n_cols = 0;
 
         // Διαβάζουμε τα metadata του αρχείου MNIST
@@ -42,13 +49,13 @@ std::vector<std::vector<unsigned char>> read_mnist_images(std::string full_path,
 
         // Δημιουργούμε ένα vector για το dataset των εικόνων
         std::vector<std::vector<unsigned char>> dataset(number_of_images, std::vector<unsigned char>(image_size));
-
         // Διαβάζουμε τα δεδομένα κάθε εικόνας
         for (int i = 0; i < number_of_images; i++) {
             file.read(reinterpret_cast<char*>(&dataset[i][0]), image_size);
         }
         return dataset;
-    } else {
+    }
+    else {
         throw std::runtime_error("Could not open file `" + full_path + "`!");
     }
 }

@@ -12,20 +12,21 @@
 #include "global_functions.h"
 
 
-int main123(int argc, char** argv) {
+int main(int argc, char* argv[]) {
+
+    std::vector<std::string> args(argv, argv + argc);
+
+    std::string inputFile, queryFile, outputFile;
+    int k, M, probes, N, number_of_images=0, image_size=0;
+    double radius;
 
     char repeatChoice = 'n'; // to control the loop
     do {
-        std::vector<std::string> args(argv, argv + argc);
-
-        std::string inputFile, queryFile, outputFile;
-        int k, M, probes, N, number_of_images, image_size;
-        double radius;
 
         if (args.size() == 1) {  // Only mode provided, prompt for paths
             std::cout << "Enter the path to the dataset: ";
             std::cin >> inputFile;
-            std::cout << inputFile << std::endl;
+
         } else {
             for (size_t i = 1; i < args.size(); i++) {
                 if (args[i] == "-d") {
@@ -48,22 +49,26 @@ int main123(int argc, char** argv) {
             }
         }
 
-
         std::vector<std::vector<unsigned char>> dataset = read_mnist_images(inputFile, number_of_images, image_size);
 
-        if (argc == 2) {
-            // If no arguments were given other than mode, then prompt for the paths after building the search structure
+        if (queryFile.empty()) {
             std::cout << "Enter the path to the query file: ";
             std::cin >> queryFile;
-            std::cout << "Enter the path for output file: ";
-            std::cin >> outputFile;
         }
 
         std::vector<std::vector<unsigned char>> query_set = read_mnist_images(queryFile, number_of_images,image_size);
 
-        Hypercube hypercube = (argc == 2) ? Hypercube(dataset) : Hypercube(dataset,k, M, probes, N, radius);
+        if (outputFile.empty()) {
+            std::cout << "Enter the path for output file: ";
+            std::cin >> outputFile;
+        }
+
+
+
+        Hypercube hypercube = (args.size() == 1 || args.size() == 5) ? Hypercube(dataset) : Hypercube(dataset,k, M, probes, N, radius);
 
         N = hypercube.returnN(); // Get the number of nearest neighbors from the Hypercube object
+
 
         std::ofstream outputFileStream("output.dat");
         if (!outputFileStream.is_open() || outputFileStream.fail()) {

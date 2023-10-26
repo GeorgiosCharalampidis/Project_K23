@@ -5,15 +5,21 @@ g++ -std=c++17 -o cluster cluster.cpp minst.cpp global_functions.cpp KMeansPLusP
 
 ./cluster -i input.dat -c cluster.conf -o output.dat -m Classic
 
+-d input.dat -q query.dat -k 4 -L 5 -o output.dat -N 1 -R 10000
 
-./lsh -d input.dat -q query.dat -k 4 -L 5 -o output.dat -N 1 -R 10000
-
-./cube -d input.dat -q query.dat -k 14 -Μ 10 -probes 2 -o output.dat -N 1 -R 10000
+-d input.dat -q query.dat -k 14 -M 10 -probes 2 -o output.dat -N 1 -R 10000
 
 ./lsh 
 
 	C:\Users\test\CLionProjects\Project_K23\input.dat
+		C:\Users\test\CLionProjects\Project_K23\input2.dat
+
+
+	
 	C:\Users\test\CLionProjects\Project_K23\query.dat
+			C:\Users\test\CLionProjects\Project_K23\query2.dat
+
+
 	C:\Users\test\CLionProjects\Project_K23\output.dat
 		
 	Putty 
@@ -34,4 +40,4 @@ g++ -std=c++17 -o cluster cluster.cpp minst.cpp global_functions.cpp KMeansPLusP
 	/home/users/sdi1600193/Project_K23/input.dat
 	/home/users/sdi1600193/Project_K23/query.dat
 	/home/users/sdi1600193/Project_K23/output.dat
-
+C:\Users\test\CLionProjects\Project_K23\input.dat

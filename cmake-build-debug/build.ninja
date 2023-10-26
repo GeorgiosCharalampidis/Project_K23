@@ -49,12 +49,6 @@ cmake_ninja_workdir = C$:/Users/test/CLionProjects/Project_K23/cmake-build-debug
 
 build cmake_object_order_depends_target_ProjectEm: phony || CMakeFiles/ProjectEm.dir
 
-build CMakeFiles/ProjectEm.dir/main.cpp.obj: CXX_COMPILER__ProjectEm_unscanned_Debug C$:/Users/test/CLionProjects/Project_K23/main.cpp || cmake_object_order_depends_target_ProjectEm
-  DEP_FILE = CMakeFiles\ProjectEm.dir\main.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always
-  OBJECT_DIR = CMakeFiles\ProjectEm.dir
-  OBJECT_FILE_DIR = CMakeFiles\ProjectEm.dir
-
 build CMakeFiles/ProjectEm.dir/mnist.cpp.obj: CXX_COMPILER__ProjectEm_unscanned_Debug C$:/Users/test/CLionProjects/Project_K23/mnist.cpp || cmake_object_order_depends_target_ProjectEm
   DEP_FILE = CMakeFiles\ProjectEm.dir\mnist.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
@@ -75,12 +69,6 @@ build CMakeFiles/ProjectEm.dir/Hypercube.cpp.obj: CXX_COMPILER__ProjectEm_unscan
 
 build CMakeFiles/ProjectEm.dir/global_functions.cpp.obj: CXX_COMPILER__ProjectEm_unscanned_Debug C$:/Users/test/CLionProjects/Project_K23/global_functions.cpp || cmake_object_order_depends_target_ProjectEm
   DEP_FILE = CMakeFiles\ProjectEm.dir\global_functions.cpp.obj.d
-  FLAGS = -g -fdiagnostics-color=always
-  OBJECT_DIR = CMakeFiles\ProjectEm.dir
-  OBJECT_FILE_DIR = CMakeFiles\ProjectEm.dir
-
-build CMakeFiles/ProjectEm.dir/main_helper.cpp.obj: CXX_COMPILER__ProjectEm_unscanned_Debug C$:/Users/test/CLionProjects/Project_K23/main_helper.cpp || cmake_object_order_depends_target_ProjectEm
-  DEP_FILE = CMakeFiles\ProjectEm.dir\main_helper.cpp.obj.d
   FLAGS = -g -fdiagnostics-color=always
   OBJECT_DIR = CMakeFiles\ProjectEm.dir
   OBJECT_FILE_DIR = CMakeFiles\ProjectEm.dir
@@ -117,7 +105,7 @@ build CMakeFiles/ProjectEm.dir/lsh.cpp.obj: CXX_COMPILER__ProjectEm_unscanned_De
 #############################################
 # Link the executable ProjectEm.exe
 
-build ProjectEm.exe: CXX_EXECUTABLE_LINKER__ProjectEm_Debug CMakeFiles/ProjectEm.dir/main.cpp.obj CMakeFiles/ProjectEm.dir/mnist.cpp.obj CMakeFiles/ProjectEm.dir/lsh_class.cpp.obj CMakeFiles/ProjectEm.dir/Hypercube.cpp.obj CMakeFiles/ProjectEm.dir/global_functions.cpp.obj CMakeFiles/ProjectEm.dir/main_helper.cpp.obj CMakeFiles/ProjectEm.dir/KMeansPLusPlus.cpp.obj CMakeFiles/ProjectEm.dir/cluster.cpp.obj CMakeFiles/ProjectEm.dir/cube.cpp.obj CMakeFiles/ProjectEm.dir/lsh.cpp.obj
+build ProjectEm.exe: CXX_EXECUTABLE_LINKER__ProjectEm_Debug CMakeFiles/ProjectEm.dir/mnist.cpp.obj CMakeFiles/ProjectEm.dir/lsh_class.cpp.obj CMakeFiles/ProjectEm.dir/Hypercube.cpp.obj CMakeFiles/ProjectEm.dir/global_functions.cpp.obj CMakeFiles/ProjectEm.dir/KMeansPLusPlus.cpp.obj CMakeFiles/ProjectEm.dir/cluster.cpp.obj CMakeFiles/ProjectEm.dir/cube.cpp.obj CMakeFiles/ProjectEm.dir/lsh.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\ProjectEm.dir
