@@ -17,4 +17,6 @@ add_executable(ProjectEm main.cpp mnist.cpp
         KMeansPLusPlus.h
         mnist.cpp
         cluster.cpp
+        cube.cpp
+        lsh.cpp
 )

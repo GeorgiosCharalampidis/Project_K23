@@ -15,7 +15,7 @@
 
 #include <chrono>
 
-int main12() {
+int main123() {
 
     int number_of_images, image_size;
 
@@ -32,10 +32,10 @@ int main12() {
     std::vector<std::vector<unsigned char>> dataset_small(dataset.begin(), dataset.begin() + 10000);
 
     //LSH lsh(dataset);
-    //Hypercube cube(dataset);
+    Hypercube cube(dataset);
 
 
-    //int numberOfNearest = cube.returnN(); // Get the number of nearest neighbors from the LSH object
+    int numberOfNearest = cube.returnN(); // Get the number of nearest neighbors from the LSH object
     //lsh.printHashTables();
     // Perform the N nearest neighbor search
 
@@ -44,7 +44,7 @@ int main12() {
     // LSH nearest neighbors and true nearest neighbors
     // Print k nearest neighbors
 
-    /*
+
 
     for (int i = 0; i < 10; ++i) {
 
@@ -80,7 +80,7 @@ int main12() {
         }
 
     }
-     */
+
 
 
     return 0;
