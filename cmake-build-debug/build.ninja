@@ -91,6 +91,12 @@ build CMakeFiles/ProjectEm.dir/KMeansPLusPlus.cpp.obj: CXX_COMPILER__ProjectEm_u
   OBJECT_DIR = CMakeFiles\ProjectEm.dir
   OBJECT_FILE_DIR = CMakeFiles\ProjectEm.dir
 
+build CMakeFiles/ProjectEm.dir/cluster.cpp.obj: CXX_COMPILER__ProjectEm_unscanned_Debug C$:/Users/test/CLionProjects/Project_K23/cluster.cpp || cmake_object_order_depends_target_ProjectEm
+  DEP_FILE = CMakeFiles\ProjectEm.dir\cluster.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\ProjectEm.dir
+  OBJECT_FILE_DIR = CMakeFiles\ProjectEm.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target ProjectEm
@@ -99,7 +105,7 @@ build CMakeFiles/ProjectEm.dir/KMeansPLusPlus.cpp.obj: CXX_COMPILER__ProjectEm_u
 #############################################
 # Link the executable ProjectEm.exe
 
-build ProjectEm.exe: CXX_EXECUTABLE_LINKER__ProjectEm_Debug CMakeFiles/ProjectEm.dir/main.cpp.obj CMakeFiles/ProjectEm.dir/mnist.cpp.obj CMakeFiles/ProjectEm.dir/lsh_class.cpp.obj CMakeFiles/ProjectEm.dir/Hypercube.cpp.obj CMakeFiles/ProjectEm.dir/global_functions.cpp.obj CMakeFiles/ProjectEm.dir/main_helper.cpp.obj CMakeFiles/ProjectEm.dir/KMeansPLusPlus.cpp.obj
+build ProjectEm.exe: CXX_EXECUTABLE_LINKER__ProjectEm_Debug CMakeFiles/ProjectEm.dir/main.cpp.obj CMakeFiles/ProjectEm.dir/mnist.cpp.obj CMakeFiles/ProjectEm.dir/lsh_class.cpp.obj CMakeFiles/ProjectEm.dir/Hypercube.cpp.obj CMakeFiles/ProjectEm.dir/global_functions.cpp.obj CMakeFiles/ProjectEm.dir/main_helper.cpp.obj CMakeFiles/ProjectEm.dir/KMeansPLusPlus.cpp.obj CMakeFiles/ProjectEm.dir/cluster.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\ProjectEm.dir

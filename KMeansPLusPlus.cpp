@@ -4,41 +4,47 @@
 #include <random>
 #include <limits>
 #include <iostream>
+#include <fstream>
 #include <chrono>
 
-KMeansPlusPlus::KMeansPlusPlus(const std::vector<std::vector<unsigned char>>& data, int k,std::string mode)
-        : data_(data), k_(k), mode(mode), lsh(data), cube(data) {
+KMeansPlusPlus::KMeansPlusPlus(const std::vector<std::vector<unsigned char>>& data, int k,std::string mode, int k_LSH, int L_LSH,
+                               int k_CUBE, int M_CUBE, int probes_CUBE, bool complete)
+        : data_(data), k_(k), mode(mode), lsh(data, k_LSH, L_LSH), cube(data, k_CUBE, M_CUBE, probes_CUBE),
+        complete(complete)
 
-    // KMeans++ initialization
-    centroids_ = getInitialCentroids();
+        {
 
+        // KMeans++ initialization
+        centroids_ = getInitialCentroids();
 
-    if (mode == "Lloyds") {
-        std::cout << "Lloyds selected.." << std::endl << std::endl;
-        auto start = std::chrono::high_resolution_clock::now(); // start timer
-        Lloyds();
-        auto end = std::chrono::high_resolution_clock::now(); // end timer
-        double timer = std::chrono::duration<double, std::milli>(end - start).count() / 1000.0; // convert to seconds
-        std::cout << "Lloyds: " << timer << " seconds" << std::endl << std::endl;
+        if (mode == "Lloyds") {
+            //std::cout << "Lloyds selected.." << std::endl << std::endl;
+            auto start = std::chrono::high_resolution_clock::now(); // start timer
+            Lloyds();
+            auto end = std::chrono::high_resolution_clock::now(); // end timer
+            double timer = std::chrono::duration<double, std::milli>(end - start).count() / 1000.0; // convert to seconds
+            //std::cout << "Lloyds: " << timer << " seconds" << std::endl << std::endl;
+            printClustersInfo("Lloyds", timer, complete);
 
-    } else if (mode == "LSH") {
-        std::cout << "LSH selected.." << std::endl << std::endl;
-        auto start = std::chrono::high_resolution_clock::now(); // start timer
-        reverseSearch("LSH");
-        auto end = std::chrono::high_resolution_clock::now(); // end timer
-        double timer = std::chrono::duration<double, std::milli>(end - start).count() / 1000.0; // convert to seconds
-        std::cout << "reverseLSH: " << timer << " seconds" << std::endl << std::endl;
+        } else if (mode == "LSH") {
+            //std::cout << "LSH selected.." << std::endl << std::endl;
+            auto start = std::chrono::high_resolution_clock::now(); // start timer
+            reverseSearch("LSH");
+            auto end = std::chrono::high_resolution_clock::now(); // end timer
+            double timer = std::chrono::duration<double, std::milli>(end - start).count() / 1000.0; // convert to seconds
+            //std::cout << "reverseLSH: " << timer << " seconds" << std::endl << std::endl;
+            printClustersInfo("Range Search LSH", timer, complete);
 
-    } else if (mode == "HyperCube") {
-        std::cout << "HyperCube selected.." << std::endl << std::endl;
-        auto start = std::chrono::high_resolution_clock::now(); // start timer
-        reverseSearch("HyperCube");
-        auto end = std::chrono::high_resolution_clock::now(); // end timer
-        double timer = std::chrono::duration<double, std::milli>(end - start).count() / 1000.0; // convert to seconds
-        std::cout << "reverseHyperCube: " << timer << " seconds" << std::endl << std::endl;
+        } else if (mode == "HyperCube") {
+            //std::cout << "HyperCube selected.." << std::endl << std::endl;
+            auto start = std::chrono::high_resolution_clock::now(); // start timer
+            reverseSearch("HyperCube");
+            auto end = std::chrono::high_resolution_clock::now(); // end timer
+            double timer = std::chrono::duration<double, std::milli>(end - start).count() / 1000.0; // convert to seconds
+            //std::cout << "reverseHyperCube: " << timer << " seconds" << std::endl << std::endl;
+            printClustersInfo("Range Search Hypercube", timer, complete);
 
     }
-
 }
 
 double KMeansPlusPlus::minDistanceToCentroid(const std::vector<unsigned char>& point,
@@ -52,7 +58,7 @@ double KMeansPlusPlus::minDistanceToCentroid(const std::vector<unsigned char>& p
     }
     return minDistance;
 }
-
+// Helper Function to print the cluster indices
 void KMeansPlusPlus::printClusterIndices() const {
     for (int i = 0; i < clusters_.size(); ++i) {
         std::cout << "Cluster " << i + 1 << " indices:\n";
@@ -73,7 +79,6 @@ int KMeansPlusPlus::getNextCentroidIndex(const std::vector<double>& squaredDista
     for (size_t i = 1; i < squaredDistances.size(); ++i) {
         partialSums[i] = partialSums[i-1] + squaredDistances[i];
     }
-
     double total = partialSums.back();
 
     std::random_device rd;
@@ -87,7 +92,6 @@ int KMeansPlusPlus::getNextCentroidIndex(const std::vector<double>& squaredDista
     auto it = std::lower_bound(partialSums.begin(), partialSums.end(), randomValue);
     return static_cast<int>(std::distance(partialSums.begin(), it));
 }
-
 
 std::vector<std::vector<unsigned char>> KMeansPlusPlus::getInitialCentroids() {
     std::vector<std::vector<unsigned char>> centroids;
@@ -127,7 +131,6 @@ std::vector<std::vector<unsigned char>> KMeansPlusPlus::getInitialCentroids() {
     return centroids;
 }
 
-
 // Clustering using Lloyds
 void KMeansPlusPlus::Lloyds() {
     // Get initial centroids
@@ -162,8 +165,6 @@ void KMeansPlusPlus::Lloyds() {
         }
 
     }
-
-    //std::cout << "Iterations: " << iterations << std::endl;
 
 }
 
@@ -212,8 +213,6 @@ std::vector<unsigned char> KMeansPlusPlus::computeMean(const std::vector<std::ve
 
     return mean;
 }
-
-
 void KMeansPlusPlus::reverseSearch(const std::string& method) {
     bool converged = false;
 
@@ -221,7 +220,6 @@ void KMeansPlusPlus::reverseSearch(const std::string& method) {
         clusters_.clear();
         clusters_.resize(centroids_.size());
         std::vector<int> assignments(data_.size(), -1);
-
         // Calculate the initial radius as half the minimum distance between centroids
         double min_distance = std::numeric_limits<double>::max();
         for (size_t i = 0; i < centroids_.size(); ++i) {
@@ -238,6 +236,7 @@ void KMeansPlusPlus::reverseSearch(const std::string& method) {
 
         do {
             allCentroidsGotPoints = true;
+            //std::cout << "current_radius: " << current_radius << std::endl;
             for (size_t i = 0; i < centroids_.size(); ++i) {
                 auto& centroid = centroids_[i];
                 std::vector<int> points_in_radius;
@@ -245,27 +244,36 @@ void KMeansPlusPlus::reverseSearch(const std::string& method) {
                 if (method == "LSH") {
                     points_in_radius = lsh.rangeSearch(centroid, current_radius);
                 } else if (method == "HyperCube") {
+                    //std::cout << centroid.size() << std::endl;
                     points_in_radius = cube.rangeSearch(centroid, current_radius);
+
+                }
+                //std::cout << "points_in_radius.size(): " << points_in_radius.size() << std::endl;
+                for (int point_idx : points_in_radius) {
+                    if (assignments[point_idx] == -1 || euclideanDistance(data_[point_idx], centroid) < euclideanDistance(data_[point_idx], centroids_[assignments[point_idx]])) {
+                        // Assignment
+                        assignments[point_idx] = i;
+                        clusters_[i].push_back(data_[point_idx]);
+
+                    }
                 }
 
                 if (points_in_radius.empty()) {
                     allCentroidsGotPoints = false; // At least one centroid got no points
-                } else {
-                    for (int point_idx : points_in_radius) {
-                        if (assignments[point_idx] == -1 || euclideanDistance(data_[point_idx], centroid) < euclideanDistance(data_[point_idx], centroids_[assignments[point_idx]])) {
-                            // Assignment
-                            assignments[point_idx] = i;
-                            clusters_[i].push_back(data_[point_idx]);
+                    //std::cout << "Centroid " << i << " got no points" << std::endl;
+                }
+            }
 
-                            // MacQueen's Update
-                            centroids_[i] = computeMean(clusters_[i]);
-                        }
-                    }
+            // Update centroids once after range search for the current radius is done for all centroids
+            for (size_t i = 0; i < centroids_.size(); ++i) {
+                if (!clusters_[i].empty()) {
+                    centroids_[i] = computeMean(clusters_[i]);
                 }
             }
 
             if (!allCentroidsGotPoints) {
                 current_radius *= 2;
+                //std::cout << "Doubling radius to " << current_radius << std::endl;
             }
 
         } while (!allCentroidsGotPoints);
@@ -295,4 +303,119 @@ void KMeansPlusPlus::reverseSearch(const std::string& method) {
         assignments_ = assignments;
     }
 }
+
+double KMeansPlusPlus::computeSilhouetteForPoint(const std::vector<unsigned char>& point, int assignedCluster) {
+    double a_i = averageDistanceToSameCluster(point, assignedCluster);
+    double b_i = averageDistanceToNearestCluster(point, assignedCluster);
+
+    return (b_i - a_i) / std::max(a_i, b_i);
+}
+
+double KMeansPlusPlus::averageDistanceToSameCluster(const std::vector<unsigned char>& point, int assignedCluster) {
+    double totalDistance = 0.0;
+    int count = 0;
+
+    for (const auto& otherPoint : clusters_[assignedCluster]) {
+        // Make sure the point doesn't compare to itself
+        if (point != otherPoint) {
+            totalDistance += euclideanDistance(point, otherPoint);
+            count++;
+        }
+    }
+
+    if (count == 0) return 0;  // edge case: either the cluster is empty or only has the point itself
+    return totalDistance / count;
+}
+
+
+double KMeansPlusPlus::averageDistanceToNearestCluster(const std::vector<unsigned char>& point, int assignedCluster) {
+    double minAverageDistance = std::numeric_limits<double>::max();
+
+    for (int i = 0; i < k_; i++) {
+        if (i == assignedCluster) continue;  // skip the cluster to which the point belongs
+
+        double totalDistance = 0.0;
+        int count = 0;
+
+        for (const auto& otherPoint : clusters_[i]) {
+            totalDistance += euclideanDistance(point, otherPoint);
+            count++;
+        }
+
+        if (count == 0) continue;  // edge case: cluster might be empty
+        double averageDistance = totalDistance / count;
+
+        if (averageDistance < minAverageDistance) {
+            minAverageDistance = averageDistance;
+        }
+    }
+
+    return minAverageDistance;
+}
+
+void KMeansPlusPlus::printClustersInfo(const std::string& algorithmName, double clusteringTime, bool completeOutput) {
+
+    std::ofstream outputFileStream("output.txt");
+    if (!outputFileStream.is_open() || outputFileStream.fail()) {
+        std::cerr << "Failed to open output.dat for writing." << std::endl;
+        return;
+    }
+
+
+    outputFileStream << "Algorithm: " << algorithmName << "\n";
+
+    // Compute the silhouette values for each cluster and the dataset
+    std::vector<double> silhouetteValues(k_, 0.0);
+    int totalDataPoints = 0;
+    double overallSilhouette = 0.0;
+    for (int i = 0; i < k_; i++) {
+        double silhouetteSum = 0.0;
+        for (const auto& point : clusters_[i]) {
+            silhouetteSum += computeSilhouetteForPoint(point, i);
+        }
+        silhouetteValues[i] = silhouetteSum / clusters_[i].size();
+        overallSilhouette += silhouetteSum;
+        totalDataPoints += clusters_[i].size();
+    }
+    overallSilhouette /= totalDataPoints;
+
+    for (int i = 0; i < k_; i++) {
+        outputFileStream << std::endl << "CLUSTER-" << (i+1) << " {size: " << clusters_[i].size()
+                  << ", centroid: [";
+        for (const auto& val : centroids_[i]) {
+            outputFileStream << static_cast<int>(val) << " ";  // Casting unsigned char to int for printing
+        }
+        outputFileStream << "]}\n";
+    }
+    outputFileStream << std::endl << "clustering_time: " << clusteringTime << " //in seconds\n";
+    outputFileStream << std::endl << "Silhouette: [";
+    for (const auto& s : silhouetteValues) {
+        outputFileStream << s << ", ";
+    }
+
+    outputFileStream << overallSilhouette << "]\n";
+
+    if (completeOutput) {
+        outputFileStream << std::endl << "Complete Output:" << std::endl;
+        for (int i = 0; i < k_; i++) {
+            outputFileStream << std::endl << "CLUSTER-" << (i+1) << " {centroid: [";
+            for (const auto& val : centroids_[i]) {
+                outputFileStream << static_cast<int>(val) << " ";
+            }
+            outputFileStream << "], ";
+            for (size_t j = 0; j < assignments_.size(); ++j) {
+                if (assignments_[j] == i) {
+                    outputFileStream << "image_number" << j << ", ";
+                }
+            }
+            outputFileStream << "}\n";
+        }
+    }
+
+    outputFileStream.flush();  // Ensure all data is written
+    outputFileStream.close();  // Close the file
+
+}
+
+
 

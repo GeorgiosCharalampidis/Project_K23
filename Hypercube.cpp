@@ -50,7 +50,9 @@ void Hypercube::buildIndex() {
 }
 
 std::vector<int> Hypercube::probe(const std::vector<unsigned char>& query_point, int maxProbes) {
+    //std::cout << "Hi" << std::endl;
     int hash_value = computeID(query_point);
+    //std::cout << "hash_value: " << hash_value << std::endl;
     std::set<int> candidates;
     int vertices_checked = 0;
     int distance = 0;
@@ -84,12 +86,13 @@ int Hypercube::fi(int hi_value) {
 }
 
 int Hypercube::computeID(const std::vector<unsigned char>& data_point) {
+    // << "Hey!" << std::endl;
     auto reduced_data_point = reduceDimensionality(data_point);
+    //std::cout << "Hey!!!" << std::endl;
 
     if (reduced_data_point.size() != reduced_dimension) {
         throw std::runtime_error("Reduced data point dimensions mismatch.");
     }
-
     int g_value = 0;
     for (int i = 0; i < k; ++i) {
         auto& [v, t] = table_functions[i];
@@ -161,9 +164,6 @@ std::vector<int> Hypercube::rangeSearch(const std::vector<unsigned char>& q) {
 std::vector<int> Hypercube::rangeSearch(const std::vector<unsigned char>& q, double radius) {
 
     std::vector<int> candidateIndices = probe(q, probes); // IT WAS k not probes
-
-
-
     // print candiateIndices
     //std::cout << candidateIndices.size() << std::endl;
 
@@ -171,12 +171,14 @@ std::vector<int> Hypercube::rangeSearch(const std::vector<unsigned char>& q, dou
     int checkedCandidates = 0;
     //std::cout << "candidateIndices.size(): " << candidateIndices.size() << std::endl;
 
-
+    //std::cout << "Radius inside rangeSearch" << radius << std::endl;
     for (const auto& index : candidateIndices) {
         if (checkedCandidates >= M) {
             break;
         }
         double distance = euclideanDistance(dataset[index], q);
+        //std::cout << "distance: " << distance << std::endl;
+        //std::cout << "radius: " << radius << std::endl;
         if (distance <= radius) { // Use the provided radius
             inRangeIndices.insert(index);
 
@@ -186,17 +188,24 @@ std::vector<int> Hypercube::rangeSearch(const std::vector<unsigned char>& q, dou
 
     // Convert the set to a vector for the final result
     std::vector<int> result(inRangeIndices.begin(), inRangeIndices.end());
+
+
     return result;
 }
 
 
 std::vector<float> Hypercube::reduceDimensionality(const std::vector<unsigned char>& data_point) {
+    //std::cout << "Entering reduceDimensionality function." << std::endl;
+    //std::cout << "data_point.size(): " << data_point.size() << std::endl;
     std::vector<float> reduced_point(reduced_dimension, 0.0);
     for (int i = 0; i < reduced_dimension; ++i) {
         for (int j = 0; j < num_dimensions; ++j) {
             reduced_point[i] += static_cast<float>(data_point[j]) * random_projection_matrix[i][j];
         }
     }
+
+    //std::cout << "Exiting reduceDimensionality function." << std::endl;
+
     return reduced_point;
 }
 

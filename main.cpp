@@ -15,9 +15,7 @@
 
 #include <chrono>
 
-
-
-int main() {
+int main12() {
 
     int number_of_images, image_size;
 
@@ -35,13 +33,6 @@ int main() {
 
     //LSH lsh(dataset);
     //Hypercube cube(dataset);
-
-
-    //KMeansPlusPlus plus(dataset, 10, "Lloyds"); // Takes around 3 minutes to run
-    //KMeansPlusPlus plus(dataset, 10, "HyperCube"); // Takes around 8 minutes to run
-    KMeansPlusPlus plus(test_set, 10, "LSH"); // Takes around 8 and a half minutes to run
-    plus.printClusterIndices();
-
 
 
     //int numberOfNearest = cube.returnN(); // Get the number of nearest neighbors from the LSH object

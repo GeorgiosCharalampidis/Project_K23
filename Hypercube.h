@@ -8,7 +8,7 @@
 class Hypercube {
 public:
     explicit Hypercube(std::vector<std::vector<unsigned char>> dataset,
-              int k = 13,int M=6000,int probes=10, int N = 1, double R = 10000);
+              int k = 14,int M=6000,int probes=10, int N = 1, double R = 10000);
     ~Hypercube();
 
 
