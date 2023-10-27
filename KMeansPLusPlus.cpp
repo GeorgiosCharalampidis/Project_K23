@@ -58,18 +58,6 @@ double KMeansPlusPlus::minDistanceToCentroid(const std::vector<unsigned char>& p
     }
     return minDistance;
 }
-// Helper Function to print the cluster indices
-void KMeansPlusPlus::printClusterIndices() const {
-    for (int i = 0; i < clusters_.size(); ++i) {
-        std::cout << "Cluster " << i + 1 << " indices:\n";
-        for (size_t j = 0; j < assignments_.size(); ++j) {
-            if (assignments_[j] == i) {
-                std::cout << j << " ";  // j is the index in the original dataset
-            }
-        }
-        std::cout << "\n----\n";  // Separation line between clusters
-    }
-}
 
 int KMeansPlusPlus::getNextCentroidIndex(const std::vector<double>& squaredDistances) {
     std::vector<double> partialSums(squaredDistances.size(), 0.0);
@@ -168,51 +156,7 @@ void KMeansPlusPlus::Lloyds() {
 
 }
 
-int KMeansPlusPlus::getClosestCentroidIndex(const std::vector<unsigned char>& point,
-                                            const std::vector<std::vector<unsigned char>>& centroids) {
-
-    int index = 0;
-    double minDistance = std::numeric_limits<double>::max();
-    //std::cout << "centroid size: " << centroids.size() << std::endl;
-    for (int i = 0; i < centroids.size(); ++i) {
-        //std::cout << "Debug: Entering for loop" << std::endl;
-        //std::cout << "Debug: Dimensions of centroid " << i << ": " << centroids[i].size() << std::endl;
-        //std::cout << "Debug: Dimensions of point: " << point.size() << std::endl;
-        double distance = euclideanDistance(point, centroids[i]);
-        if (distance < minDistance) {
-            minDistance = distance;
-            index = i;
-        }
-    }
-
-    return index;
-}
-
-std::vector<unsigned char> KMeansPlusPlus::computeMean(const std::vector<std::vector<unsigned char>>& cluster) {
-    if (cluster.empty()) {
-        return {};
-    }
-
-    size_t dimension = cluster[0].size();
-    // Using vector of doubles for intermediate mean values
-    std::vector<double> intermediateMean(dimension, 0.0);
-    std::vector<unsigned char> mean(dimension, 0);
-
-    // Sum up values using double to avoid overflow
-    for (const auto& point : cluster) {
-        for (size_t i = 0; i < dimension; ++i) {
-            intermediateMean[i] += point[i];
-        }
-    }
-
-    // Calculate mean using floating-point division and round the result
-    for (size_t i = 0; i < dimension; ++i) {
-        intermediateMean[i] /= static_cast<double>(cluster.size());
-        mean[i] = static_cast<unsigned char>(std::round(intermediateMean[i]));
-    }
-
-    return mean;
-}
+// Clustering using reverse search LSH or HyperCube
 void KMeansPlusPlus::reverseSearch(const std::string& method) {
     bool converged = false;
 
@@ -303,6 +247,49 @@ void KMeansPlusPlus::reverseSearch(const std::string& method) {
         assignments_ = assignments;
     }
 }
+
+int KMeansPlusPlus::getClosestCentroidIndex(const std::vector<unsigned char>& point,
+                                            const std::vector<std::vector<unsigned char>>& centroids) {
+
+    int index = 0;
+    double minDistance = std::numeric_limits<double>::max();
+    for (int i = 0; i < centroids.size(); ++i) {
+        double distance = euclideanDistance(point, centroids[i]);
+        if (distance < minDistance) {
+            minDistance = distance;
+            index = i;
+        }
+    }
+
+    return index;
+}
+
+std::vector<unsigned char> KMeansPlusPlus::computeMean(const std::vector<std::vector<unsigned char>>& cluster) {
+    if (cluster.empty()) {
+        return {};
+    }
+
+    size_t dimension = cluster[0].size();
+    // Using vector of doubles for intermediate mean values
+    std::vector<double> intermediateMean(dimension, 0.0);
+    std::vector<unsigned char> mean(dimension, 0);
+
+    // Sum up values using double to avoid overflow
+    for (const auto& point : cluster) {
+        for (size_t i = 0; i < dimension; ++i) {
+            intermediateMean[i] += point[i];
+        }
+    }
+
+    // Calculate mean using floating-point division and round the result
+    for (size_t i = 0; i < dimension; ++i) {
+        intermediateMean[i] /= static_cast<double>(cluster.size());
+        mean[i] = static_cast<unsigned char>(std::round(intermediateMean[i]));
+    }
+
+    return mean;
+}
+
 
 double KMeansPlusPlus::computeSilhouetteForPoint(const std::vector<unsigned char>& point, int assignedCluster) {
     double a_i = averageDistanceToSameCluster(point, assignedCluster);

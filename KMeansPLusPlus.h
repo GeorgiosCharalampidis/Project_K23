@@ -17,9 +17,6 @@ public:
     explicit KMeansPlusPlus(const std::vector<std::vector<unsigned char>>& data, int k=10, std::string mode="Lloyds",
                             int k_LSH = 4, int L_LSH = 3, int k_CUBE = 7, int M_CUBE = 10, int probes_CUBE = 2,bool complete = false);
 
-    void printClusterIndices() const;
-
-
 private:
     LSH lsh;
     Hypercube cube;
@@ -31,21 +28,19 @@ private:
     std::vector<std::vector<std::vector<unsigned char>>> clusters_;
     std::mt19937 mt;
     bool complete;
-    double minDistanceToCentroid(const std::vector<unsigned char>& point,
-                                 const std::vector<std::vector<unsigned char>>& centroids);
-
-    int getNextCentroidIndex(const std::vector<double>& squaredDistances);
 
     std::vector<std::vector<unsigned char>> getInitialCentroids();
+    std::vector<unsigned char> computeMean(const std::vector<std::vector<unsigned char>>& cluster);
+
+    int getClosestCentroidIndex(const std::vector<unsigned char>& point,
+                                const std::vector<std::vector<unsigned char>>& centroids);
+    int getNextCentroidIndex(const std::vector<double>& squaredDistances);
 
     void Lloyds();
     void reverseSearch(const std::string& method);
 
-    int getClosestCentroidIndex(const std::vector<unsigned char>& point,
-                                const std::vector<std::vector<unsigned char>>& centroids);
-
-    std::vector<unsigned char> computeMean(const std::vector<std::vector<unsigned char>>& cluster);
-
+    double minDistanceToCentroid(const std::vector<unsigned char>& point,
+                                 const std::vector<std::vector<unsigned char>>& centroids);
     double computeSilhouetteForPoint(const std::vector<unsigned char>& point, int assignedCluster);
     double averageDistanceToSameCluster(const std::vector<unsigned char>& point, int assignedCluster);
     double averageDistanceToNearestCluster(const std::vector<unsigned char>& point, int assignedCluster);

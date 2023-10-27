@@ -20,30 +20,6 @@ public:
     [[nodiscard]] double returnR() const;
 
 private:
-    void buildIndex();
-
-
-    // Calculates hash value for a given data point using hi values
-    int hashDataPoint(const std::vector<int>& hi_values);
-
-    // Calculates hi values for a given data point
-    std::vector<int> calculateHiValues(const std::vector<unsigned char>& data_point);
-
-    // Returns candidates by probing the hypercube for the given query point
-    std::vector<int> probe(const std::vector<unsigned char>& query_point, int maxHammingDistance);
-
-    // Defines the function to map hi values to {0, 1}
-    int fi(int hi_value);
-
-    // Creates hash functions for the hypercube
-    std::vector<std::pair<std::vector<float>, float>> createHashFunctions(int k, int dim);
-
-    // Reduces the dimensionality of the data point using the random projection matrix
-    std::vector<float> reduceDimensionality(const std::vector<unsigned char>& data_point);
-
-    // Computes the ID value for a data point
-    int computeID(const std::vector<unsigned char>& data_point);
-
     // Member variables
     std::vector<std::vector<unsigned char>> dataset;
     int k;
@@ -59,6 +35,24 @@ private:
     std::vector<std::vector<int>> hash_table;
     std::vector<std::pair<std::vector<float>, float>> table_functions;
     std::mt19937 generator;
+
+    void buildIndex();
+
+    // Computes the ID value for a data point
+    int computeID(const std::vector<unsigned char>& data_point);
+
+    // Defines the function to map hi values to {0, 1}
+    int fi(int hi_value);
+
+    // Returns candidates by probing the hypercube for the given query point
+    std::vector<int> probe(const std::vector<unsigned char>& query_point, int maxHammingDistance);
+    // Creates hash functions for the hypercube
+    std::vector<std::pair<std::vector<float>, float>> createHashFunctions(int k, int dim);
+    // Reduces the dimensionality of the data point using the random projection matrix
+    std::vector<float> reduceDimensionality(const std::vector<unsigned char>& data_point);
+
+
+
 };
 
 #endif // HYPERCUBE_H
