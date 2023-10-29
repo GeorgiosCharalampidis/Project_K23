@@ -12,7 +12,7 @@
 #include "KMeansPLusPlus.h"
 #include "mnist.h"
 
-int main1234(int argc, char* argv[]) {
+int main(int argc, char* argv[]) {
     std::string input, configPath, outputPath, method;
     bool complete = false;
     int number_of_clusters = 5;

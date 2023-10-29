@@ -12,7 +12,7 @@
 #include "global_functions.h"
 
 
-int main(int argc, char* argv[]) {
+int main435315532(int argc, char* argv[]) {
 
     std::vector<std::string> args(argv, argv + argc);
 

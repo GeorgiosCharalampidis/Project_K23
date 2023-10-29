@@ -16,7 +16,7 @@ class KMeansPlusPlus {
 public:
     explicit KMeansPlusPlus(const std::vector<std::vector<unsigned char>>& data, int k=10, std::string mode="Lloyds",
                             int k_LSH = 4, int L_LSH = 3, int k_CUBE = 7, int M_CUBE = 10, int probes_CUBE = 2,bool complete = false);
-
+    ~KMeansPlusPlus();
 private:
     LSH lsh;
     Hypercube cube;

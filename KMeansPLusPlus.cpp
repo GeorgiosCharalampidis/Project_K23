@@ -46,6 +46,15 @@ KMeansPlusPlus::KMeansPlusPlus(const std::vector<std::vector<unsigned char>>& da
 
     }
 }
+KMeansPlusPlus::~KMeansPlusPlus() {
+    for (auto& cluster : clusters_) {
+        cluster.clear();
+    }
+    clusters_.clear();
+    assignments_.clear();
+    centroids_.clear();
+    data_.clear();
+}
 
 double KMeansPlusPlus::minDistanceToCentroid(const std::vector<unsigned char>& point,
                                              const std::vector<std::vector<unsigned char>>& centroids) {
@@ -122,7 +131,6 @@ std::vector<std::vector<unsigned char>> KMeansPlusPlus::getInitialCentroids() {
 // Clustering using Lloyds
 void KMeansPlusPlus::Lloyds() {
     // Get initial centroids
-    //int iterations = 0;
     std::vector<std::vector<unsigned char>> oldCentroids;
 
     while (centroids_ != oldCentroids){
@@ -146,14 +154,11 @@ void KMeansPlusPlus::Lloyds() {
                 std::cerr << "Error: Invalid centroid index " << closestCentroidIndex << " for data point " << i << std::endl;
             }
         }
-
         // Update step
         for (int i = 0; i < k_; ++i) {
             centroids_[i] = computeMean(clusters_[i]);
         }
-
     }
-
 }
 
 // Clustering using reverse search LSH or HyperCube
@@ -290,7 +295,6 @@ std::vector<unsigned char> KMeansPlusPlus::computeMean(const std::vector<std::ve
     return mean;
 }
 
-
 double KMeansPlusPlus::computeSilhouetteForPoint(const std::vector<unsigned char>& point, int assignedCluster) {
     double a_i = averageDistanceToSameCluster(point, assignedCluster);
     double b_i = averageDistanceToNearestCluster(point, assignedCluster);
@@ -314,7 +318,6 @@ double KMeansPlusPlus::averageDistanceToSameCluster(const std::vector<unsigned c
     return totalDistance / count;
 }
 
-
 double KMeansPlusPlus::averageDistanceToNearestCluster(const std::vector<unsigned char>& point, int assignedCluster) {
     double minAverageDistance = std::numeric_limits<double>::max();
 
@@ -336,7 +339,6 @@ double KMeansPlusPlus::averageDistanceToNearestCluster(const std::vector<unsigne
             minAverageDistance = averageDistance;
         }
     }
-
     return minAverageDistance;
 }
 
@@ -347,7 +349,6 @@ void KMeansPlusPlus::printClustersInfo(const std::string& algorithmName, double 
         std::cerr << "Failed to open output.dat for writing." << std::endl;
         return;
     }
-
 
     outputFileStream << "Algorithm: " << algorithmName << "\n";
 
@@ -403,6 +404,4 @@ void KMeansPlusPlus::printClustersInfo(const std::string& algorithmName, double 
     outputFileStream.close();  // Close the file
 
 }
-
-
 
