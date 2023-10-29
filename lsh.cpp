@@ -13,7 +13,7 @@
 #include "global_functions.h"
 
 
-int main42142142(int argc, char** argv) {
+int main(int argc, char** argv) {
 
     std::vector<std::string> args(argv, argv + argc);
 
