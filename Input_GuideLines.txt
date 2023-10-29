@@ -1,7 +1,9 @@
 
-- Compile με εντολή g++ -std=c++17 -o main main.cpp minst.cpp main_helper.cpp global_functions.cpp KMeansPLusPlus.cpp Hypercube.cpp lsh.cpp
+g++ -std=c++17 -o cluster cluster.cpp mnist.cpp global_functions.cpp KMeansPLusPlus.cpp Hypercube.cpp lsh_class.cpp
 
-g++ -std=c++17 -o cluster cluster.cpp minst.cpp global_functions.cpp KMeansPLusPlus.cpp Hypercube.cpp lsh_class.cpp
+g++ -std==c++17 -o lsh lsh.cpp lsh_class.cpp mnist.cpp global_functions.cpp
+
+g++ -std==c++17 -o cube cube.cpp Hypercube.cpp mnist.cpp global_functions.cpp
 
 ./cluster -i input.dat -c cluster.conf -o output.dat -m Classic
 
@@ -15,6 +17,7 @@ g++ -std=c++17 -o cluster cluster.cpp minst.cpp global_functions.cpp KMeansPLusP
 		C:\Users\test\CLionProjects\Project_K23\input2.dat
 
 
+	
 	C:\Users\test\CLionProjects\Project_K23\query.dat
 			C:\Users\test\CLionProjects\Project_K23\query2.dat
 
