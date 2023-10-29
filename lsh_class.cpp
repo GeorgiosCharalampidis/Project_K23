@@ -36,9 +36,9 @@ LSH::LSH(std::vector<std::vector<unsigned char>> dataset,int k, int L, int N, do
         ri_values[i] = dist(generator);
     }
 
-    // Generate 'w' randomly in the range [1000, 1100]
+    // Generate 'w' randomly in the range [400, 500]
 
-    std::uniform_real_distribution<double> w_distribution(400, 800);
+    std::uniform_real_distribution<double> w_distribution(400, 500);
     w = w_distribution(generator);
     buildIndex();
 }
@@ -108,8 +108,8 @@ int64_t LSH::computeID(const std::vector<unsigned char>& data_point, int table_i
     }
 
     //const int64_t M = (1LL << 32) - 5; // This simply wont work, id_value!= query_id_value always with this M
-    const int64_t M = 100000003; // Define M as a large prime
-
+    //const int64_t M = 1000000003; // Define M as a large prime
+    const int64_t M = (1LL << 30) - 5;
     uint64_t id_value = 0;
 
     for (int i = 0; i < k; ++i) {
