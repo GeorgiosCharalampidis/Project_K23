@@ -88,93 +88,37 @@ std::vector<unsigned char> convertToUnsignedChar(const std::vector<double>& vec)
     return result;
 }
 
-// ------------------------------------     SECTION OF UNUSED FUNCTIONS     ------------------------------------ //
+/* Lloyds NO MacQueen Update
+void KMeansPlusPlus::Lloyds() {
+    // Get initial centroids
+    std::vector<std::vector<unsigned char>> oldCentroids;
 
-/*
+    while (centroids_ != oldCentroids){
+        oldCentroids = centroids_;
 
-// reverseSearch uses MacQueen's Update to update the centroid after every point assignment
-void KMeansPlusPlus::reverseSearch(const std::string& method) {
-    bool converged = false;
-
-    while (!converged) {
+        // Assignment step
         clusters_.clear();
-        clusters_.resize(centroids_.size());
-        std::vector<int> assignments(data_.size(), -1);
+        clusters_.resize(k_);
+        assignments_.resize(data_.size());
 
-        // Calculate the initial radius as half the minimum distance between centroids
-        double min_distance = std::numeric_limits<double>::max();
-        for (size_t i = 0; i < centroids_.size(); ++i) {
-            for (size_t j = i + 1; j < centroids_.size(); ++j) {
-                double dist = euclideanDistance(centroids_[i], centroids_[j]);
-                if (dist < min_distance) {
-                    min_distance = dist;
-                }
+        for (size_t i = 0; i < data_.size(); ++i) {
+            const auto& point = data_[i];
+            int closestCentroidIndex = getClosestCentroidIndex(point, centroids_);
+            if (closestCentroidIndex >= 0 && closestCentroidIndex < k_) {
+                clusters_[closestCentroidIndex].push_back(point);
+                //std::cout << "Cluster " << closestCentroidIndex << " (After Assignment): Dimensions = " << clusters_[closestCentroidIndex].size() << std::endl;
+                assignments_[i] = closestCentroidIndex;
+                //iterations++;
+
+            } else {
+                std::cerr << "Error: Invalid centroid index " << closestCentroidIndex << " for data point " << i << std::endl;
             }
         }
-
-        double current_radius = min_distance / 2;
-        bool allCentroidsGotPoints;
-
-        do {
-            allCentroidsGotPoints = true;
-            for (size_t i = 0; i < centroids_.size(); ++i) {
-                auto& centroid = centroids_[i];
-                std::vector<int> points_in_radius;
-
-                if (method == "LSH") {
-                    points_in_radius = lsh.rangeSearch(centroid, current_radius);
-                } else if (method == "HyperCube") {
-                    points_in_radius = cube.rangeSearch(centroid, current_radius);
-                }
-
-                if (points_in_radius.empty()) {
-                    allCentroidsGotPoints = false; // At least one centroid got no points
-                } else {
-                    for (int point_idx : points_in_radius) {
-                        if (assignments[point_idx] == -1 || euclideanDistance(data_[point_idx], centroid) < euclideanDistance(data_[point_idx], centroids_[assignments[point_idx]])) {
-                            // Assignment
-                            assignments[point_idx] = i;
-                            clusters_[i].push_back(data_[point_idx]);
-
-                            // MacQueen's Update
-                            centroids_[i] = computeMean(clusters_[i]);
-                        }
-                    }
-                }
-            }
-
-            if (!allCentroidsGotPoints) {
-                current_radius *= 2;
-            }
-
-        } while (!allCentroidsGotPoints);
-
-        // Check for convergence
-        converged = true;
-        std::vector<std::vector<unsigned char>> new_centroids(centroids_.size());
-        for (size_t i = 0; i < centroids_.size(); ++i) {
-            new_centroids[i] = computeMean(clusters_[i]);
-            if (euclideanDistance(centroids_[i], new_centroids[i]) > 0.0001) {
-                converged = false;
-                break;
-            }
+        // Update step
+        for (int i = 0; i < k_; ++i) {
+            centroids_[i] = computeMean(clusters_[i]);
         }
-
-        // Handle unassigned points
-        for (size_t i = 0; i < assignments.size(); ++i) {
-            if (assignments[i] == -1) {
-                int closestCentroidIndex = getClosestCentroidIndex(data_[i], centroids_);
-                assignments[i] = closestCentroidIndex;
-                clusters_[closestCentroidIndex].push_back(data_[i]);
-
-                // Update the centroid after assigning a previously unassigned point
-                centroids_[closestCentroidIndex] = computeMean(clusters_[closestCentroidIndex]);
-            }
-        }
-        assignments_ = assignments;
     }
 }
 
-
-
- */
+*/

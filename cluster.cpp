@@ -80,7 +80,7 @@ int main(int argc, char* argv[]) {
 
     std::vector<std::vector<unsigned char>> dataset = read_mnist_images(input, number_of_images, image_size);
 
-    std::vector<std::vector<unsigned char>> test_set(dataset.begin(), dataset.begin() + 10000);
+    std::vector<std::vector<unsigned char>> test_set(dataset.begin(), dataset.begin() + 5000);
 
     // Depending on the method:
     if (method == "Classic") {

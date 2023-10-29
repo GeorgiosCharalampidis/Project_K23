@@ -23,8 +23,10 @@ KMeansPlusPlus::KMeansPlusPlus(const std::vector<std::vector<unsigned char>>& da
             Lloyds();
             auto end = std::chrono::high_resolution_clock::now(); // end timer
             double timer = std::chrono::duration<double, std::milli>(end - start).count() / 1000.0; // convert to seconds
-            //std::cout << "Lloyds: " << timer << " seconds" << std::endl << std::endl;
+            std::cout << "Lloyds: " << timer << " seconds" << std::endl << std::endl;
+            std::cout << "Silhouette for Lloyds is being created.." << std::endl;
             printClustersInfo("Lloyds", timer, complete);
+            std::cout << "Silhouette for Lloyds saved on output.txt" << std::endl << std::endl;
 
         } else if (mode == "LSH") {
             //std::cout << "LSH selected.." << std::endl << std::endl;
@@ -32,8 +34,10 @@ KMeansPlusPlus::KMeansPlusPlus(const std::vector<std::vector<unsigned char>>& da
             reverseSearch("LSH");
             auto end = std::chrono::high_resolution_clock::now(); // end timer
             double timer = std::chrono::duration<double, std::milli>(end - start).count() / 1000.0; // convert to seconds
-            //std::cout << "reverseLSH: " << timer << " seconds" << std::endl << std::endl;
+            std::cout << "reverseLSH: " << timer << " seconds" << std::endl << std::endl;
+            std::cout << "Silhouette for LSH is being created.." << std::endl;
             printClustersInfo("Range Search LSH", timer, complete);
+            std::cout << "Silhouette for LSH saved on output.txt" << std::endl << std::endl;
 
         } else if (mode == "HyperCube") {
             //std::cout << "HyperCube selected.." << std::endl << std::endl;
@@ -41,9 +45,10 @@ KMeansPlusPlus::KMeansPlusPlus(const std::vector<std::vector<unsigned char>>& da
             reverseSearch("HyperCube");
             auto end = std::chrono::high_resolution_clock::now(); // end timer
             double timer = std::chrono::duration<double, std::milli>(end - start).count() / 1000.0; // convert to seconds
-            //std::cout << "reverseHyperCube: " << timer << " seconds" << std::endl << std::endl;
+            std::cout << "reverseHyperCube: " << timer << " seconds" << std::endl << std::endl;
+            std::cout << "Silhouette for HyperCube is being created.." << std::endl;
             printClustersInfo("Range Search Hypercube", timer, complete);
-
+            std::cout << "Silhouette for HyperCube saved on output.txt" << std::endl << std::endl;
     }
 }
 KMeansPlusPlus::~KMeansPlusPlus() {
@@ -128,15 +133,15 @@ std::vector<std::vector<unsigned char>> KMeansPlusPlus::getInitialCentroids() {
     return centroids;
 }
 
-// Clustering using Lloyds
+// MACQUEEN Update
 void KMeansPlusPlus::Lloyds() {
     // Get initial centroids
     std::vector<std::vector<unsigned char>> oldCentroids;
 
-    while (centroids_ != oldCentroids){
+    do {
         oldCentroids = centroids_;
 
-        // Assignment step
+        // Assignment and immediate update steps
         clusters_.clear();
         clusters_.resize(k_);
         assignments_.resize(data_.size());
@@ -146,20 +151,19 @@ void KMeansPlusPlus::Lloyds() {
             int closestCentroidIndex = getClosestCentroidIndex(point, centroids_);
             if (closestCentroidIndex >= 0 && closestCentroidIndex < k_) {
                 clusters_[closestCentroidIndex].push_back(point);
-                //std::cout << "Cluster " << closestCentroidIndex << " (After Assignment): Dimensions = " << clusters_[closestCentroidIndex].size() << std::endl;
                 assignments_[i] = closestCentroidIndex;
-                //iterations++;
+
+                // MacQueen's update
+                centroids_[closestCentroidIndex] = computeMean(clusters_[closestCentroidIndex]);
 
             } else {
                 std::cerr << "Error: Invalid centroid index " << closestCentroidIndex << " for data point " << i << std::endl;
             }
         }
-        // Update step
-        for (int i = 0; i < k_; ++i) {
-            centroids_[i] = computeMean(clusters_[i]);
-        }
-    }
+
+    } while (centroids_ != oldCentroids);
 }
+
 
 // Clustering using reverse search LSH or HyperCube
 void KMeansPlusPlus::reverseSearch(const std::string& method) {
